@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RePlate — Smart Campus Mess Surplus Router</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              900: '#064e3b',
+              950: '#022c22',
+            },
+            darkbg: '#090d16',
+            cardbg: '#111827',
+            cardborder: '#1f2937',
+            surface: '#151f32'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #090d16;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090d16;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1f2937;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #10b981;
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(16, 185, 129, 0.35);
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.08);
+    }
+    .pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+  </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="border-b border-slate-800/80 bg-darkbg/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Logo & Campus Info -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white font-black text-xl">
+          ⟲
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">RePlate</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Campus Router</span>
+          </div>
+          <p class="text-xs text-slate-400 flex items-center gap-1.5 font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Robin Hood Hostel Mess <span class="text-slate-600">|</span> Node #01 (350 Capacity)
+          </p>
+        </div>
+      </div>
+
+      <!-- Live Monitoring Indicators & Quick Actions -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Live heartbeat indicator -->
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-slate-800 text-xs font-mono text-slate-300">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span id="liveClock" class="font-semibold text-emerald-400">--:--:--</span>
+        </div>
+
+        <!-- Discord Webhook Button -->
+        <button onclick="openDiscordModal()" title="Configure Discord Webhook Notifications" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-xs font-medium text-slate-300 transition">
+          <svg class="w-4 h-4 text-indigo-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
+          <span class="hidden md:inline" id="discordStatusLabel">Discord Bot</span>
+        </button>
+
+        <!-- Reset Demo Button -->
+        <button onclick="resetDemoState()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold transition active:scale-95 shadow-sm">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span>Reset Demo</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN 4 NAVIGATION TABS -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800/60 bg-darkbg">
+      <nav class="flex space-x-2 sm:space-x-8 overflow-x-auto py-2.5" aria-label="Tabs">
+        <!-- Tab 1: Kitchen Predictor -->
+        <button onclick="switchTab('tab-predictor')" id="btn-tab-predictor" class="tab-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+          <span class="text-base">🍳</span>
+          <span>1. Kitchen Predictor</span>
+          <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-500/30 text-emerald-300">PREVENTION</span>
+        </button>
+
+        <!-- Tab 2: Surplus Logger -->
+        <button onclick="switchTab('tab-logger')" id="btn-tab-logger" class="tab-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
+          <span class="text-base">🍲</span>
+          <span>2. Surplus Logger</span>
+          <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300">TRIAGE</span>
+        </button>
+
+        <!-- Tab 3: NGO Rescue Portal -->
+        <button onclick="switchTab('tab-rescue')" id="btn-tab-rescue" class="tab-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
+          <span class="text-base">🚚</span>
+          <span>3. NGO Rescue Portal</span>
+          <span id="activeBadgeCount" class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300">3 ACTIVE</span>
+        </button>
+
+        <!-- Tab 4: Impact Metrics -->
+        <button onclick="switchTab('tab-impact')" id="btn-tab-impact" class="tab-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
+          <span class="text-base">📊</span>
+          <span>4. Impact Metrics</span>
+          <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300">JUDGES' VIEW</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT CONTENT -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ========================================================================= -->
+    <!-- TAB 1: KITCHEN PREDICTOR (PREVENTION) -->
+    <!-- ========================================================================= -->
+    <div id="tab-predictor" class="tab-panel space-y-6">
+      
+      <!-- Top Banner Header -->
+      <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-56 h-56 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
+            <span>🛡️ Source Reduction Engine</span>
+            <span>•</span>
+            <span>Prevention > Redistribution</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Intelligent Kitchen Headcount & Batch Size Optimizer
+          </h2>
+          <p class="text-slate-400 text-sm mt-2 leading-relaxed">
+            By collecting student meal opt-outs prior to evening prep, RePlate recalculates exact raw grain, dairy, and produce requirements—preventing food from ever being over-cooked in the first place (saving <strong class="text-emerald-400">0.45 kg raw food</strong> per skipped meal).
+          </p>
+        </div>
+      </div>
+
+      <!-- Interactive Forecasting Workspace -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Interactive Controls (Left 7 Cols) -->
+        <div class="lg:col-span-7 glass-card rounded-2xl p-6 space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div>
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <span>Tonight's Dinner RSVP Opt-Outs</span>
+              </h3>
+              <p class="text-xs text-slate-400">Total registered hostel capacity: 350 hostellers</p>
+            </div>
+            <div class="text-right">
+              <span id="optOutCountDisplay" class="text-3xl font-extrabold font-mono text-emerald-400">45</span>
+              <span class="text-xs text-slate-400 block">Students Skipping</span>
+            </div>
+          </div>
+
+          <!-- Slider Input -->
+          <div class="space-y-3">
+            <div class="flex justify-between text-xs font-medium text-slate-400">
+              <span>0 (Full 350 Capacity)</span>
+              <span>175 (Half Strength)</span>
+              <span>350 (No Diners)</span>
+            </div>
+            <input type="range" id="rsvpSlider" min="0" max="350" value="45"
+                   class="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none"
+                   oninput="handleSliderChange(this.value)" onchange="commitRsvp(this.value)">
+          </div>
+
+          <!-- Quick Simulation Buttons -->
+          <div>
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">⚡ Quick Scenario Presets</label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button onclick="setRsvpOptOuts(25)" class="px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-emerald-600/20 hover:border-emerald-500/40 border border-slate-700/60 text-xs font-semibold text-slate-200 transition text-center">
+                Simulate 25 Skipping
+              </button>
+              <button onclick="adjustRsvpDelta(10)" class="px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-emerald-600/20 hover:border-emerald-500/40 border border-slate-700/60 text-xs font-semibold text-slate-200 transition text-center">
+                +10 Late Diners
+              </button>
+              <button onclick="setRsvpOptOuts(80)" class="px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-emerald-600/20 hover:border-emerald-500/40 border border-slate-700/60 text-xs font-semibold text-slate-200 transition text-center">
+                Weekend Out (80)
+              </button>
+              <button onclick="setRsvpOptOuts(0)" class="px-3 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-semibold text-rose-300 transition text-center">
+                Reset RSVP (0)
+              </button>
+            </div>
+          </div>
+
+          <!-- Visual Progress Comparison Bar -->
+          <div class="pt-2 space-y-2">
+            <div class="flex justify-between text-xs text-slate-300">
+              <span>Standard Cooking Target: <strong id="stdTargetDisplay">157.5 kg</strong></span>
+              <span class="text-emerald-400">Saved: <strong id="savedRawDisplay">20.25 kg</strong> raw ingredients</span>
+            </div>
+            <div class="w-full bg-slate-800/90 rounded-full h-4 p-0.5 flex overflow-hidden border border-slate-700">
+              <div id="prepBarActive" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-300" style="width: 87%;"></div>
+              <div id="prepBarSaved" class="bg-emerald-950/60 border-l border-emerald-500/50 h-full transition-all duration-300 flex items-center justify-center text-[9px] font-bold text-emerald-400" style="width: 13%;">
+                SAVED
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500">Green shows active kitchen target; dark stripe indicates raw pantry items kept in stock.</p>
+          </div>
+
+          <!-- Live Chef Advisory Box -->
+          <div class="bg-surface/80 rounded-xl p-4 border border-slate-800 flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex-shrink-0 flex items-center justify-center text-emerald-400 text-sm">
+              👨‍🍳
+            </div>
+            <div>
+              <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Kitchen Prep Directive for Evening Head Chef:</h4>
+              <p id="chefAdvisoryText" class="text-xs text-slate-300 mt-1 leading-relaxed">
+                Reduce Rice Cooker Vessel #2 by 12 kg. Hold back 90 dough balls for breakfast rolling. Do not simmer batch 3 of Dal Tadka.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Calculated Live Metrics (Right 5 Cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <!-- Card: Expected Diners -->
+          <div class="glass-card rounded-2xl p-5 border-l-4 border-l-emerald-500">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Expected Diners Tonight</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">Live Forecast</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span id="expectedDinersVal" class="text-4xl font-extrabold font-mono text-white">305</span>
+              <span class="text-sm text-slate-400">/ 350 Hostellers</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Directly fed from student mobile opt-out toggles.</p>
+          </div>
+
+          <!-- Card: Recommended Prep Weight -->
+          <div class="glass-card rounded-2xl p-5 border-l-4 border-l-cyan-500">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Recommended Prep Batch Size</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300">Optimized</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span id="optimizedTargetVal" class="text-4xl font-extrabold font-mono text-cyan-400">137.25</span>
+              <span class="text-sm text-slate-300">kg</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Down from unoptimized baseline of <span id="baselineTargetText">157.5 kg</span>.</p>
+          </div>
+
+          <!-- Card: Raw Food Prevented -->
+          <div class="glass-card rounded-2xl p-5 border-l-4 border-l-teal-500">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pre-Production Waste Prevented</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">Pantry Retained</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span id="preSavedKgVal" class="text-4xl font-extrabold font-mono text-emerald-400">20.25</span>
+              <span class="text-sm text-slate-300">kg food</span>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <span class="text-slate-500 block">Procurement Saved:</span>
+                <span id="preMoneySavedVal" class="font-bold text-slate-200">₹1,721</span>
+              </div>
+              <div>
+                <span class="text-slate-500 block">Carbon Avoided:</span>
+                <span id="preCo2SavedVal" class="font-bold text-teal-400">50.6 kg CO₂e</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 2: SURPLUS LOGGER (TRIAGE) -->
+    <!-- ========================================================================= -->
+    <div id="tab-logger" class="tab-panel hidden space-y-6">
+      
+      <!-- Top Banner Header -->
+      <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+        <div class="max-w-3xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-3">
+            <span>⚡ Rapid Kitchen Closing Triage</span>
+            <span>•</span>
+            <span>2-Tap Logging & Auto-Expiry</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Log Remaining Trays & Broadcast Pickup Call
+          </h2>
+          <p class="text-slate-400 text-sm mt-2 leading-relaxed">
+            When dinner ends, mess supervisors log excess trays in under 15 seconds. RePlate assigns strict microbiological shelf-life countdowns and generates a tamper-proof 4-digit handover OTP.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Form Column (Left 7 Cols) -->
+        <div class="lg:col-span-7 glass-card rounded-2xl p-6 space-y-6">
+          <form id="surplusForm" onsubmit="handleLogSurplus(event)" class="space-y-5">
+            
+            <!-- Food Description Input -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                1. Food Item & Tray Description
+              </label>
+              <input type="text" id="foodItemsInput" required
+                     placeholder="e.g., Dal Tadka & Steamed Jeera Rice (2 Large Trays)"
+                     class="w-full px-4 py-3 rounded-xl bg-surface border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition text-sm">
+              <!-- Quick Chips -->
+              <div class="flex flex-wrap gap-1.5 mt-2">
+                <button type="button" onclick="fillDishDescription('Paneer Butter Masala & Phulkas')" class="px-2.5 py-1 rounded-lg bg-slate-800 text-[11px] text-slate-300 hover:text-emerald-400 hover:bg-slate-700 transition">
+                  Paneer Butter Masala
+                </button>
+                <button type="button" onclick="fillDishDescription('Moong Dal Tadka & Rice')" class="px-2.5 py-1 rounded-lg bg-slate-800 text-[11px] text-slate-300 hover:text-emerald-400 hover:bg-slate-700 transition">
+                  Dal & Rice
+                </button>
+                <button type="button" onclick="fillDishDescription('Tawa Rotis (100 pcs)')" class="px-2.5 py-1 rounded-lg bg-slate-800 text-[11px] text-slate-300 hover:text-emerald-400 hover:bg-slate-700 transition">
+                  Tawa Rotis
+                </button>
+                <button type="button" onclick="fillDishDescription('Veg Biryani & Mix Veg')" class="px-2.5 py-1 rounded-lg bg-slate-800 text-[11px] text-slate-300 hover:text-emerald-400 hover:bg-slate-700 transition">
+                  Veg Biryani
+                </button>
+              </div>
+            </div>
+
+            <!-- Category Radio Cards -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                2. Category & Micro-Biological Safe Window
+              </label>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                
+                <!-- Category 1: Dairy/Curry -->
+                <label class="category-card cursor-pointer rounded-xl p-3.5 border border-slate-700/80 bg-surface hover:border-amber-500/50 transition block relative">
+                  <input type="radio" name="foodCategory" value="Dairy/Curry" class="hidden" onchange="updateShelfLifePreview('Dairy/Curry')">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl">🍲</span>
+                    <div>
+                      <h4 class="text-xs font-bold text-white">Dairy / Curry</h4>
+                      <p class="text-[10px] text-amber-400 font-semibold mt-0.5">⏱ 2hr Safe Window</p>
+                    </div>
+                  </div>
+                  <p class="text-[10px] text-slate-400 mt-2">Paneer, gravies, milk sweets. High spoilage risk.</p>
+                </label>
+
+                <!-- Category 2: Rice/Grains -->
+                <label class="category-card cursor-pointer rounded-xl p-3.5 border-2 border-emerald-500 bg-emerald-500/10 transition block relative">
+                  <input type="radio" name="foodCategory" value="Rice/Grains" checked class="hidden" onchange="updateShelfLifePreview('Rice/Grains')">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl">🍚</span>
+                    <div>
+                      <h4 class="text-xs font-bold text-white">Rice & Grains</h4>
+                      <p class="text-[10px] text-cyan-400 font-semibold mt-0.5">⏱ 4hr Safe Window</p>
+                    </div>
+                  </div>
+                  <p class="text-[10px] text-slate-400 mt-2">Pulao, dal-chawal, khichdi. Medium perishability.</p>
+                </label>
+
+                <!-- Category 3: Rotis/Dry -->
+                <label class="category-card cursor-pointer rounded-xl p-3.5 border border-slate-700/80 bg-surface hover:border-emerald-500/50 transition block relative">
+                  <input type="radio" name="foodCategory" value="Rotis/Dry" class="hidden" onchange="updateShelfLifePreview('Rotis/Dry')">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl">🫓</span>
+                    <div>
+                      <h4 class="text-xs font-bold text-white">Rotis & Dry</h4>
+                      <p class="text-[10px] text-emerald-400 font-semibold mt-0.5">⏱ 6hr Safe Window</p>
+                    </div>
+                  </div>
+                  <p class="text-[10px] text-slate-400 mt-2">Phulkas, theplas, dry subji. Low moisture.</p>
+                </label>
+
+              </div>
+            </div>
+
+            <!-- Weight Input & Quick Steppers -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+                3. Net Weight (kg)
+              </label>
+              <div class="flex items-center gap-3">
+                <input type="number" id="weightKgInput" required step="0.5" min="1" max="100" value="15.0"
+                       class="w-36 px-4 py-3 rounded-xl bg-surface border border-slate-700 text-white font-mono font-bold text-lg focus:outline-none focus:border-emerald-500 transition">
+                <span class="text-sm font-semibold text-slate-400">kg</span>
+                
+                <!-- Fast Chips -->
+                <div class="flex gap-1.5">
+                  <button type="button" onclick="setWeightInput(5)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">+5</button>
+                  <button type="button" onclick="setWeightInput(10)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">+10</button>
+                  <button type="button" onclick="setWeightInput(15)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">+15</button>
+                  <button type="button" onclick="setWeightInput(25)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">+25</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Expiry Preview Alert Box -->
+            <div class="bg-surface/90 rounded-xl p-3.5 border border-slate-800 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="text-amber-400 text-base">⏳</span>
+                <span class="text-slate-300">Strict Safe Consumption Until:</span>
+              </div>
+              <span id="previewExpiryTime" class="font-mono font-bold text-emerald-400 text-sm">--:-- --</span>
+            </div>
+
+            <!-- Submit & Simulate Buttons -->
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+              <button type="submit" id="btnLogSurplus" class="flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition active:scale-95 flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                <span>Log Surplus & Generate Security OTP</span>
+              </button>
+              
+              <button type="button" onclick="simulateDemoSurplus()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition flex items-center justify-center gap-1.5 active:scale-95 whitespace-nowrap">
+                <span>⚡ Simulate Demo Surplus</span>
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- Info / Guidelines Column (Right 5 Cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <div class="glass-card rounded-2xl p-5 border-l-4 border-l-amber-500">
+            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <span>🛡️ FSSAI Food Safety Compliance</span>
+            </h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Every surplus batch logged into RePlate is assigned a cold-chain/ambient countdown based on Indian Food Safety regulations. Once the timer reaches 00:00:00, the batch is automatically transitioned to <strong class="text-rose-400">"Expired"</strong> to prevent unsafe consumption.
+            </p>
+          </div>
+
+          <!-- Shelf Life Table -->
+          <div class="glass-card rounded-2xl p-5 space-y-3">
+            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Perishability Triage Rules</h4>
+            <div class="space-y-2 text-xs">
+              <div class="flex items-center justify-between p-2 rounded-lg bg-surface border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  <span class="font-medium text-slate-200">Dairy / Gravy / Paneer</span>
+                </div>
+                <span class="font-mono font-bold text-amber-400">2 Hours Max</span>
+              </div>
+              <div class="flex items-center justify-between p-2 rounded-lg bg-surface border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                  <span class="font-medium text-slate-200">Rice, Grains & Khichdi</span>
+                </div>
+                <span class="font-mono font-bold text-cyan-400">4 Hours Max</span>
+              </div>
+              <div class="flex items-center justify-between p-2 rounded-lg bg-surface border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                  <span class="font-medium text-slate-200">Rotis, Chapatis & Dry Subji</span>
+                </div>
+                <span class="font-mono font-bold text-emerald-400">6 Hours Max</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Notice -->
+          <div class="glass-card rounded-2xl p-5 border border-slate-800">
+            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <span>🔐 OTP Handover Protocol</span>
+            </h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              When an NGO claims a batch, a random 4-digit token is locked. The mess security guard verifies this OTP upon NGO van arrival at Robin Hood Hostel back gate before releasing the trays.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 3: NGO RESCUE PORTAL (REDISTRIBUTION) -->
+    <!-- ========================================================================= -->
+    <div id="tab-rescue" class="tab-panel hidden space-y-6">
+      
+      <!-- Top Banner Header -->
+      <div class="glass-card rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 mb-3">
+            <span>🚚 Real-Time Redistribution Feed</span>
+            <span>•</span>
+            <span>Live Ticking Timers</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Active Campus Surplus Batches
+          </h2>
+          <p class="text-slate-400 text-sm mt-1 leading-relaxed">
+            Registered partner NGOs claim available batches for immediate transit to local hunger shelters. Real-time countdown prevents bacterial spoilage.
+          </p>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex flex-wrap gap-2">
+          <button onclick="setBatchFilter('all')" id="filter-all" class="batch-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-white border border-slate-700">
+            All (<span id="count-all">4</span>)
+          </button>
+          <button onclick="setBatchFilter('Available')" id="filter-Available" class="batch-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+            Available (<span id="count-available">3</span>)
+          </button>
+          <button onclick="setBatchFilter('Claimed')" id="filter-Claimed" class="batch-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200">
+            Claimed (<span id="count-claimed">1</span>)
+          </button>
+          <button onclick="setBatchFilter('Expired')" id="filter-Expired" class="batch-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200">
+            Expired (<span id="count-expired">0</span>)
+          </button>
+        </div>
+      </div>
+
+      <!-- Batches Grid Container -->
+      <div id="batchesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TAB 4: IMPACT METRICS (JUDGES' VIEW) -->
+    <!-- ========================================================================= -->
+    <div id="tab-impact" class="tab-panel hidden space-y-6">
+      
+      <!-- Top Banner Header -->
+      <div class="glass-card rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-2">
+            <span>🏆 Arbiter Hackathon Pitch Telemetry</span>
+            <span>•</span>
+            <span>Measurable Verified ESG Impact</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            RePlate Closed-Loop Impact Telemetry
+          </h2>
+          <p class="text-slate-400 text-sm mt-1">
+            Real-time data proving source reduction (Kitchen Predictor) + secondary recovery (NGO Rescue).
+          </p>
+        </div>
+
+        <button onclick="copyImpactSummary()" class="px-4 py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/40 text-xs font-semibold flex items-center gap-2 transition active:scale-95 whitespace-nowrap">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+          <span>Copy Pitch Telemetry</span>
+        </button>
+      </div>
+
+      <!-- 4 BIG HERO KPI CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- KPI 1: Total Kg Diverted -->
+        <div class="glass-card rounded-2xl p-5 border-t-4 border-t-emerald-500 relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Food Diverted</span>
+            <span class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-sm">⚖️</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpiTotalDiverted" class="text-3xl sm:text-4xl font-extrabold font-mono text-emerald-400">38.25</span>
+            <span class="text-sm font-semibold text-slate-300">kg</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">
+            <span id="kpiBreakdownText" class="text-emerald-300 font-medium">20.25kg prevented</span> + <span id="kpiRescuedText" class="text-cyan-300 font-medium">18.0kg rescued</span>
+          </p>
+        </div>
+
+        <!-- KPI 2: Meals Served -->
+        <div class="glass-card rounded-2xl p-5 border-t-4 border-t-cyan-500 relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nutritious Meals Served</span>
+            <span class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-sm">🍱</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpiMealsServed" class="text-3xl sm:text-4xl font-extrabold font-mono text-cyan-400">96</span>
+            <span class="text-sm font-semibold text-slate-300">meals</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">Standardized @ 400g per balanced student meal.</p>
+        </div>
+
+        <!-- KPI 3: Surplus Recovery Rate -->
+        <div class="glass-card rounded-2xl p-5 border-t-4 border-t-amber-500 relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Surplus Recovery Rate</span>
+            <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 text-sm">🔄</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpiRecoveryRate" class="text-3xl sm:text-4xl font-extrabold font-mono text-amber-400">27.5</span>
+            <span class="text-sm font-semibold text-slate-300">%</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">Claimed vs. total logged mess surplus.</p>
+        </div>
+
+        <!-- KPI 4: Pre-Meal Waste Cut % -->
+        <div class="glass-card rounded-2xl p-5 border-t-4 border-t-purple-500 relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pre-Meal Waste Cut %</span>
+            <span class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 text-sm">📉</span>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span id="kpiPreWasteCut" class="text-3xl sm:text-4xl font-extrabold font-mono text-purple-400">12.9</span>
+            <span class="text-sm font-semibold text-slate-300">%</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2">Direct kitchen source reduction from student RSVPs.</p>
+        </div>
+
+      </div>
+
+      <!-- Financial & ESG Co-Benefits Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        
+        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 border border-slate-800">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl font-bold flex-shrink-0">
+            ₹
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Campus Mess Budget Saved</span>
+            <div class="flex items-baseline gap-2 mt-0.5">
+              <span id="kpiMoneySaved" class="text-2xl font-bold font-mono text-white">₹3,251</span>
+              <span class="text-xs text-emerald-400">this cycle</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Calculated at average ₹85/kg wholesale raw commodity cost.</p>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 border border-slate-800">
+          <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400 text-2xl flex-shrink-0">
+            🌱
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">CO₂e Landfill Emissions Prevented</span>
+            <div class="flex items-baseline gap-2 mt-0.5">
+              <span id="kpiCo2Saved" class="text-2xl font-bold font-mono text-teal-400">95.6 kg</span>
+              <span class="text-xs text-slate-400">GHG equivalent</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Using EPA WARM model (2.5 kg CO₂e avoided per kg food waste diverted).</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CHART.JS VISUALIZATIONS -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Chart 1: 7-Day Baseline vs RePlate (8 Cols) -->
+        <div class="lg:col-span-8 glass-card rounded-2xl p-6 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="text-base font-bold text-white flex items-center gap-2">
+                <span>7-Day Pre-RePlate Baseline vs. Post-RePlate Reduction</span>
+              </h3>
+              <p class="text-xs text-slate-400">Comparing historical wasted kg prior to RePlate vs. current optimized waste</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 w-fit">
+              -78.4% Waste Drop
+            </span>
+          </div>
+
+          <div class="relative h-72 sm:h-80 w-full">
+            <canvas id="historicalChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Category Breakdown (4 Cols) -->
+        <div class="lg:col-span-4 glass-card rounded-2xl p-6 space-y-4">
+          <div class="border-b border-slate-800 pb-3">
+            <h3 class="text-base font-bold text-white">Surplus Triage Mix</h3>
+            <p class="text-xs text-slate-400">Active distribution by perishability category</p>
+          </div>
+
+          <div class="relative h-56 w-full flex items-center justify-center">
+            <canvas id="categoryChart"></canvas>
+          </div>
+
+          <div id="categoryLegend" class="grid grid-cols-1 gap-2 pt-2 text-xs border-t border-slate-800/80">
+            <!-- Filled dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- CLAIM RESCUE MODAL -->
+  <div id="claimModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-6 space-y-5 border border-slate-700 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <span>🤝 Claim Food Rescue Pickup</span>
+        </h3>
+        <button onclick="closeClaimModal()" class="text-slate-400 hover:text-white transition text-lg">&times;</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <span class="text-xs text-slate-400">Selected Batch:</span>
+          <div id="modalBatchTitle" class="font-bold text-emerald-400 text-sm mt-0.5">--</div>
+          <div id="modalBatchMeta" class="text-xs text-slate-300 font-mono mt-0.5">--</div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+            Select Partner Rescue Organization
+          </label>
+          <select id="modalNgoSelect" class="w-full px-3 py-2.5 rounded-xl bg-surface border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500">
+            <option value="Robin Hood Army Pune">Robin Hood Army Pune</option>
+            <option value="Feeding India by Zomato">Feeding India by Zomato</option>
+            <option value="Pune City Roti Bank">Pune City Roti Bank</option>
+            <option value="Annamrita Foundation">Annamrita Foundation</option>
+            <option value="Good Samaritan Food Relief">Good Samaritan Food Relief</option>
+          </select>
+        </div>
+
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-300">
+          ⚠️ <strong>Strict Time Commitment:</strong> The claiming organization agrees to arrive at Robin Hood Hostel Mess Backgate before countdown expiry.
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button onclick="closeClaimModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold transition">
+          Cancel
+        </button>
+        <button onclick="confirmClaim()" id="btnConfirmClaim" class="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold shadow-lg shadow-emerald-500/20 transition">
+          Confirm & Lock OTP
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCORD WEBHOOK MODAL -->
+  <div id="discordModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-6 space-y-5 border border-slate-700 shadow-2xl relative">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <span>🔔 Discord Webhook Integration</span>
+        </h3>
+        <button onclick="closeDiscordModal()" class="text-slate-400 hover:text-white transition text-lg">&times;</button>
+      </div>
+
+      <div class="space-y-3">
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Provide a Discord channel webhook URL. When a mess supervisor logs surplus food, RePlate automatically broadcasts an alert embed to your NGO volunteer server with batch specs, meal count, and expiry countdown.
+        </p>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+            Discord Webhook URL (Optional)
+          </label>
+          <input type="url" id="discordWebhookInput" placeholder="https://discord.com/api/webhooks/..."
+                 class="w-full px-3 py-2.5 rounded-xl bg-surface border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-emerald-500">
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button onclick="closeDiscordModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold transition">
+          Close
+        </button>
+        <button onclick="saveDiscordWebhook()" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg transition">
+          Save Webhook URL
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // Global App State
+    let appState = {
+      hostel_name: "Robin Hood Hostel Mess",
+      capacity: 350,
+      current_rsvp: { opt_outs: 45 },
+      batches: [],
+      historical_baseline: [],
+      metrics: {},
+      discord_configured: false
+    };
+
+    let activeFilter = 'all';
+    let selectedBatchForClaim = null;
+    let historicalChartInstance = null;
+    let categoryChartInstance = null;
+
+    // Shelf life map in hours
+    const SHELF_LIFE_MAP = {
+      "Dairy/Curry": 2,
+      "Rice/Grains": 4,
+      "Rotis/Dry": 6
+    };
+
+    // Initialize on page load
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchState();
+      initLiveClock();
+      updateShelfLifePreview("Rice/Grains");
+      // Poll / tick countdowns every second
+      setInterval(tickCountdowns, 1000);
+      // Auto-refresh state every 30 seconds
+      setInterval(fetchState, 30000);
+    });
+
+    // Clock
+    function initLiveClock() {
+      const clockEl = document.getElementById("liveClock");
+      const update = () => {
+        const now = new Date();
+        clockEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      };
+      update();
+      setInterval(update, 1000);
+    }
+
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.add("hidden"));
+      document.getElementById(tabId).classList.remove("hidden");
+
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.remove("bg-emerald-500/20", "text-emerald-400", "border-emerald-500/40");
+        btn.classList.add("text-slate-400", "border-transparent");
+      });
+
+      const activeBtn = document.getElementById("btn-" + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add("bg-emerald-500/20", "text-emerald-400", "border-emerald-500/40");
+        activeBtn.classList.remove("text-slate-400", "border-transparent");
+      }
+
+      if (tabId === "tab-impact") {
+        setTimeout(renderCharts, 50);
+      }
+    }
+
+    // Fetch Full State from Flask Backend
+    async function fetchState() {
+      try {
+        const res = await fetch("/api/state");
+        const data = await res.json();
+        if (data.status === "success") {
+          appState = data;
+          syncUI();
+        }
+      } catch (err) {
+        console.error("Error fetching state:", err);
+      }
+    }
+
+    // Sync all views to current state
+    function syncUI() {
+      syncPredictorUI();
+      syncBatchesUI();
+      syncImpactUI();
+      updateDiscordLabel();
+    }
+
+    // ==========================================
+    // 1. KITCHEN PREDICTOR LOGIC
+    // ==========================================
+    function syncPredictorUI() {
+      const optOuts = appState.current_rsvp?.opt_outs || 0;
+      const capacity = appState.capacity || 350;
+      const expected = Math.max(0, capacity - optOuts);
+      const stdCook = (capacity * 0.45).toFixed(2);
+      const optCook = (expected * 0.45).toFixed(2);
+      const savedRaw = (optOuts * 0.45).toFixed(2);
+      const moneySaved = Math.round(optOuts * 0.45 * 85);
+      const co2Saved = (optOuts * 0.45 * 2.5).toFixed(1);
+
+      // Slider & numbers
+      const slider = document.getElementById("rsvpSlider");
+      if (slider && document.activeElement !== slider) {
+        slider.value = optOuts;
+      }
+      document.getElementById("optOutCountDisplay").textContent = optOuts;
+      document.getElementById("expectedDinersVal").textContent = expected;
+      document.getElementById("optimizedTargetVal").textContent = optCook;
+      document.getElementById("baselineTargetText").textContent = stdCook + " kg";
+      document.getElementById("stdTargetDisplay").textContent = stdCook + " kg";
+      document.getElementById("savedRawDisplay").textContent = savedRaw + " kg";
+      document.getElementById("preSavedKgVal").textContent = savedRaw;
+      document.getElementById("preMoneySavedVal").textContent = "₹" + moneySaved.toLocaleString();
+      document.getElementById("preCo2SavedVal").textContent = co2Saved + " kg CO₂e";
+
+      // Progress Bar width
+      const activePct = Math.max(5, Math.round((expected / capacity) * 100));
+      const savedPct = 100 - activePct;
+      document.getElementById("prepBarActive").style.width = activePct + "%";
+      document.getElementById("prepBarSaved").style.width = savedPct + "%";
+
+      // Dynamic Chef Directive
+      const chefText = document.getElementById("chefAdvisoryText");
+      if (optOuts === 0) {
+        chefText.textContent = "Full hostel capacity attending tonight. Fire all burners to standard 157.5 kg volume (350 meal portions).";
+      } else if (optOuts <= 30) {
+        chefText.textContent = `Mild opt-out volume (${optOuts} students). Scale down rice batch by ${(optOuts * 0.2).toFixed(1)} kg and reduce roti count by ~${optOuts * 2} pieces.`;
+      } else if (optOuts <= 75) {
+        chefText.textContent = `Noticeable opt-out volume (${optOuts} students). Turn off burner #3. Save ${(optOuts * 0.45).toFixed(1)} kg of raw lentils/vegetables in pantry for tomorrow lunch.`;
+      } else {
+        chefText.textContent = `Major weekend exodus (${optOuts} students absent). Halve prep batch size. Prepare only ${optCook} kg total. Immediate pantry savings: ₹${moneySaved}.`;
+      }
+    }
+
+    function handleSliderChange(val) {
+      document.getElementById("optOutCountDisplay").textContent = val;
+      // Temporary live forecast update while dragging
+      const capacity = appState.capacity || 350;
+      const optOuts = parseInt(val) || 0;
+      const expected = Math.max(0, capacity - optOuts);
+      document.getElementById("expectedDinersVal").textContent = expected;
+      document.getElementById("optimizedTargetVal").textContent = (expected * 0.45).toFixed(2);
+      document.getElementById("savedRawDisplay").textContent = (optOuts * 0.45).toFixed(2) + " kg";
+      document.getElementById("preSavedKgVal").textContent = (optOuts * 0.45).toFixed(2);
+    }
+
+    async function commitRsvp(val) {
+      try {
+        const res = await fetch("/api/student-rsvp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ opt_outs: parseInt(val) })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          appState.current_rsvp = data.current_rsvp;
+          appState.metrics = data.metrics;
+          syncUI();
+          showToast(`RSVP updated: ${val} students opting out tonight`, "success");
+        }
+      } catch (err) {
+        showToast("Failed to update student RSVP", "error");
+      }
+    }
+
+    function setRsvpOptOuts(count) {
+      document.getElementById("rsvpSlider").value = count;
+      commitRsvp(count);
+    }
+
+    function adjustRsvpDelta(delta) {
+      const current = appState.current_rsvp?.opt_outs || 0;
+      const next = Math.max(0, Math.min(appState.capacity || 350, current + delta));
+      setRsvpOptOuts(next);
+    }
+
+    // ==========================================
+    // 2. SURPLUS LOGGER LOGIC
+    // ==========================================
+    function updateShelfLifePreview(category) {
+      const hours = SHELF_LIFE_MAP[category] || 4;
+      const now = new Date();
+      now.setHours(now.getHours() + hours);
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      document.getElementById("previewExpiryTime").textContent = `${timeStr} (in ${hours} hrs)`;
+
+      // Update card border highlights
+      document.querySelectorAll(".category-card").forEach(card => {
+        const input = card.querySelector("input");
+        if (input.value === category) {
+          card.classList.add("border-2", "border-emerald-500", "bg-emerald-500/10");
+          card.classList.remove("border-slate-700/80", "bg-surface");
+        } else {
+          card.classList.remove("border-2", "border-emerald-500", "bg-emerald-500/10");
+          card.classList.add("border-slate-700/80", "bg-surface");
+        }
+      });
+    }
+
+    function fillDishDescription(text) {
+      document.getElementById("foodItemsInput").value = text;
+    }
+
+    function setWeightInput(val) {
+      const input = document.getElementById("weightKgInput");
+      const current = parseFloat(input.value) || 0;
+      input.value = (current + val).toFixed(1);
+    }
+
+    async function handleLogSurplus(e) {
+      e.preventDefault();
+      const foodItems = document.getElementById("foodItemsInput").value.trim();
+      const category = document.querySelector("input[name='foodCategory']:checked")?.value || "Rice/Grains";
+      const weight = parseFloat(document.getElementById("weightKgInput").value);
+
+      if (!foodItems || !weight) return;
+
+      const btn = document.getElementById("btnLogSurplus");
+      btn.disabled = true;
+      btn.innerHTML = `<span>Broadcasting...</span>`;
+
+      try {
+        const res = await fetch("/api/log-surplus", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            food_items: foodItems,
+            category: category,
+            weight_kg: weight
+          })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          appState.batches = data.batches;
+          appState.metrics = data.metrics;
+          syncUI();
+          showToast(`Surplus logged! Batch ID: ${data.batch.id} • OTP: ${data.batch.handover_otp}`, "success");
+          document.getElementById("foodItemsInput").value = "";
+          // Switch to NGO rescue portal to see card with live timer
+          switchTab("tab-rescue");
+        } else {
+          showToast(data.message || "Failed to log surplus", "error");
+        }
+      } catch (err) {
+        showToast("Network error while logging surplus", "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg><span>Log Surplus & Generate Security OTP</span>`;
+      }
+    }
+
+    async function simulateDemoSurplus() {
+      try {
+        const res = await fetch("/api/simulate-surplus", { method: "POST" });
+        const data = await res.json();
+        if (data.status === "success") {
+          appState.batches = data.batches;
+          appState.metrics = data.metrics;
+          syncUI();
+          showToast(`Simulated: ${data.batch.food_items} (${data.batch.weight_kg} kg)`, "success");
+          switchTab("tab-rescue");
+        }
+      } catch (err) {
+        showToast("Error generating demo surplus", "error");
+      }
+    }
+
+    // ==========================================
+    // 3. NGO RESCUE PORTAL LOGIC
+    // ==========================================
+    function setBatchFilter(filter) {
+      activeFilter = filter;
+      document.querySelectorAll(".batch-filter-btn").forEach(btn => {
+        btn.classList.remove("bg-slate-800", "text-white", "border", "border-slate-700", "bg-emerald-500/20", "text-emerald-300");
+        btn.classList.add("text-slate-400");
+      });
+      const activeBtn = document.getElementById("filter-" + filter);
+      if (activeBtn) {
+        activeBtn.classList.remove("text-slate-400");
+        activeBtn.classList.add("bg-slate-800", "text-white", "border", "border-slate-700");
+      }
+      syncBatchesUI();
+    }
+
+    function syncBatchesUI() {
+      const batches = appState.batches || [];
+      const container = document.getElementById("batchesContainer");
+      if (!container) return;
+
+      // Update counters
+      const availableCount = batches.filter(b => b.status === "Available").length;
+      const claimedCount = batches.filter(b => b.status === "Claimed").length;
+      const expiredCount = batches.filter(b => b.status === "Expired").length;
+
+      document.getElementById("count-all").textContent = batches.length;
+      document.getElementById("count-available").textContent = availableCount;
+      document.getElementById("count-claimed").textContent = claimedCount;
+      document.getElementById("count-expired").textContent = expiredCount;
+      document.getElementById("activeBadgeCount").textContent = `${availableCount} ACTIVE`;
+
+      const filtered = batches.filter(b => {
+        if (activeFilter === "all") return true;
+        return b.status === activeFilter;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full glass-card rounded-2xl p-12 text-center text-slate-400">
+            <span class="text-3xl block mb-2">🍽️</span>
+            <p class="font-bold text-slate-300">No surplus batches found in this view.</p>
+            <p class="text-xs text-slate-500 mt-1">Log a new batch from the Surplus Logger tab or click Simulate Demo Surplus.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(batch => renderBatchCard(batch)).join("");
+    }
+
+    function renderBatchCard(batch) {
+      const meals = Math.round(batch.weight_kg / 0.4);
+      let catBadgeClass = "bg-cyan-500/10 text-cyan-400 border-cyan-500/30";
+      if (batch.category === "Dairy/Curry") catBadgeClass = "bg-amber-500/10 text-amber-400 border-amber-500/30";
+      if (batch.category === "Rotis/Dry") catBadgeClass = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+
+      let statusBadge = "";
+      let actionArea = "";
+
+      if (batch.status === "Available") {
+        statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Available for Rescue</span>`;
+        actionArea = `
+          <button onclick="openClaimModal('${batch.id}')" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-emerald-500/20 transition active:scale-95 flex items-center justify-center gap-1.5">
+            <span>Claim Pickup (NGO)</span>
+          </button>
+        `;
+      } else if (batch.status === "Claimed") {
+        statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/40">Claimed: ${escapeHtml(batch.claimed_by || 'NGO')}</span>`;
+        actionArea = `
+          <div class="bg-surface/90 border border-blue-500/40 rounded-xl p-3 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kitchen Handover OTP</span>
+              <span class="text-xs text-blue-400">Present upon van arrival</span>
+            </div>
+            <div class="px-3 py-1 rounded-lg bg-blue-950/80 border border-blue-400 text-blue-300 font-mono font-black text-lg tracking-widest shadow-inner">
+              ${batch.handover_otp}
+            </div>
+          </div>
+        `;
+      } else {
+        statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">Expired (Bio-Compost)</span>`;
+        actionArea = `
+          <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-[11px] text-rose-300 text-center font-medium">
+            Safe consumption threshold elapsed. Routed to campus biogas generator.
+          </div>
+        `;
+      }
+
+      return `
+        <div class="glass-card glass-card-hover rounded-2xl p-5 flex flex-col justify-between space-y-4 transition" data-batch-id="${batch.id}" data-expires-at="${batch.expires_at}">
+          
+          <!-- Card Header -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="font-mono text-xs font-bold text-slate-400">#${batch.id}</span>
+              ${statusBadge}
+            </div>
+            <h3 class="text-base font-bold text-white leading-snug">${escapeHtml(batch.food_items)}</h3>
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${catBadgeClass}">
+                ${batch.category}
+              </span>
+              <span class="text-xs text-slate-400">
+                <strong>${batch.weight_kg} kg</strong> (~${meals} meals)
+              </span>
+            </div>
+          </div>
+
+          <!-- Live Spoilage Countdown Timer -->
+          <div class="bg-surface/80 rounded-xl p-3 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-400 flex items-center gap-1">
+                <span>⏱</span> Spoilage Countdown:
+              </span>
+              <span class="countdown-timer font-mono font-bold text-emerald-400 text-sm" data-id="${batch.id}">
+                --:--:--
+              </span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div class="countdown-progress bg-emerald-500 h-full rounded-full transition-all duration-1000" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="pt-1">
+            ${actionArea}
+          </div>
+
+        </div>
+      `;
+    }
+
+    // Ticking Countdown Timers for Spoilage Prevention
+    function tickCountdowns() {
+      const now = new Date().getTime();
+      document.querySelectorAll("[data-expires-at]").forEach(card => {
+        const expiresAtStr = card.getAttribute("data-expires-at");
+        const batchId = card.getAttribute("data-batch-id");
+        const timerEl = card.querySelector(".countdown-timer");
+        const progressEl = card.querySelector(".countdown-progress");
+
+        if (!expiresAtStr || !timerEl) return;
+
+        const targetTime = new Date(expiresAtStr).getTime();
+        const diff = targetTime - now;
+
+        if (diff <= 0) {
+          timerEl.textContent = "00:00:00 (EXPIRED)";
+          timerEl.classList.remove("text-emerald-400", "text-amber-400");
+          timerEl.classList.add("text-rose-400");
+          if (progressEl) progressEl.style.width = "0%";
+          return;
+        }
+
+        const totalSecs = Math.floor(diff / 1000);
+        const hours = Math.floor(totalSecs / 3600);
+        const mins = Math.floor((totalSecs % 3600) / 60);
+        const secs = totalSecs % 60;
+
+        const pad = (n) => String(n).padStart(2, "0");
+        timerEl.textContent = `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+
+        // Dynamic timer styling based on time remaining
+        if (totalSecs < 1800) {
+          // Less than 30 mins: red pulse
+          timerEl.className = "countdown-timer font-mono font-bold text-rose-400 text-sm animate-pulse";
+          if (progressEl) progressEl.className = "countdown-progress bg-rose-500 h-full rounded-full";
+        } else if (totalSecs < 3600) {
+          // Less than 1 hour: amber warning
+          timerEl.className = "countdown-timer font-mono font-bold text-amber-400 text-sm";
+          if (progressEl) progressEl.className = "countdown-progress bg-amber-500 h-full rounded-full";
+        } else {
+          timerEl.className = "countdown-timer font-mono font-bold text-emerald-400 text-sm";
+          if (progressEl) progressEl.className = "countdown-progress bg-emerald-500 h-full rounded-full";
+        }
+      });
+    }
+
+    // Claim Modal Handlers
+    function openClaimModal(batchId) {
+      selectedBatchForClaim = batchId;
+      const batch = (appState.batches || []).find(b => b.id === batchId);
+      if (!batch) return;
+
+      document.getElementById("modalBatchTitle").textContent = batch.food_items;
+      document.getElementById("modalBatchMeta").textContent = `${batch.weight_kg} kg • ${batch.category} • Batch #${batch.id}`;
+      document.getElementById("claimModal").classList.remove("hidden");
+      document.getElementById("claimModal").classList.add("flex");
+    }
+
+    function closeClaimModal() {
+      document.getElementById("claimModal").classList.add("hidden");
+      document.getElementById("claimModal").classList.remove("flex");
+      selectedBatchForClaim = null;
+    }
+
+    async function confirmClaim() {
+      if (!selectedBatchForClaim) return;
+      const ngoName = document.getElementById("modalNgoSelect").value;
+      const btn = document.getElementById("btnConfirmClaim");
+      btn.disabled = true;
+      btn.textContent = "Locking Claim...";
+
+      try {
+        const res = await fetch("/api/claim-surplus", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: selectedBatchForClaim,
+            ngo_name: ngoName
+          })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          appState.batches = data.batches;
+          appState.metrics = data.metrics;
+          closeClaimModal();
+          syncUI();
+          showToast(`Claimed by ${ngoName}! Handover OTP: ${data.handover_otp}`, "success");
+        } else {
+          showToast(data.message || "Failed to claim batch", "error");
+        }
+      } catch (err) {
+        showToast("Error communicating with server", "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Confirm & Lock OTP";
+      }
+    }
+
+    // ==========================================
+    // 4. IMPACT METRICS LOGIC & CHARTS
+    // ==========================================
+    function syncImpactUI() {
+      const m = appState.metrics || {};
+      
+      document.getElementById("kpiTotalDiverted").textContent = (m.total_diverted_kg || 0).toFixed(1);
+      document.getElementById("kpiMealsServed").textContent = (m.meals_diverted || 0).toLocaleString();
+      document.getElementById("kpiRecoveryRate").textContent = (m.surplus_recovery_rate_pct || 0).toFixed(1);
+      document.getElementById("kpiPreWasteCut").textContent = (m.pre_meal_waste_cut_pct || 0).toFixed(1);
+      document.getElementById("kpiMoneySaved").textContent = "₹" + (m.money_saved_inr || 0).toLocaleString();
+      document.getElementById("kpiCo2Saved").textContent = (m.co2_saved_kg || 0).toFixed(1) + " kg";
+
+      document.getElementById("kpiBreakdownText").textContent = `${(m.pre_production_saved_kg || 0).toFixed(1)}kg prevented`;
+      document.getElementById("kpiRescuedText").textContent = `${(m.claimed_surplus_kg || 0).toFixed(1)}kg rescued`;
+
+      // Update category legend
+      const catLegend = document.getElementById("categoryLegend");
+      if (catLegend && m.category_weights) {
+        catLegend.innerHTML = `
+          <div class="flex items-center justify-between text-slate-300">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Dairy/Curry</span>
+            <span class="font-mono font-bold">${m.category_weights['Dairy/Curry'] || 0} kg</span>
+          </div>
+          <div class="flex items-center justify-between text-slate-300">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> Rice/Grains</span>
+            <span class="font-mono font-bold">${m.category_weights['Rice/Grains'] || 0} kg</span>
+          </div>
+          <div class="flex items-center justify-between text-slate-300">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Rotis/Dry</span>
+            <span class="font-mono font-bold">${m.category_weights['Rotis/Dry'] || 0} kg</span>
+          </div>
+        `;
+      }
+    }
+
+    function renderCharts() {
+      renderHistoricalChart();
+      renderCategoryChart();
+    }
+
+    function renderHistoricalChart() {
+      const ctx = document.getElementById("historicalChart");
+      if (!ctx) return;
+
+      const baseline = appState.historical_baseline || [];
+      const labels = baseline.map(b => b.day);
+      const preWaste = baseline.map(b => b.pre_replate_waste_kg);
+      const postWaste = baseline.map(b => b.post_replate_waste_kg);
+
+      if (historicalChartInstance) {
+        historicalChartInstance.destroy();
+      }
+
+      historicalChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Before RePlate Waste (kg)',
+              data: preWaste,
+              backgroundColor: 'rgba(239, 68, 68, 0.75)',
+              borderColor: '#ef4444',
+              borderWidth: 1.5,
+              borderRadius: 6
+            },
+            {
+              label: 'Post-RePlate Waste (kg)',
+              data: postWaste,
+              backgroundColor: 'rgba(16, 185, 129, 0.85)',
+              borderColor: '#10b981',
+              borderWidth: 1.5,
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: '#cbd5e1',
+                font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '600' }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#111827',
+              borderColor: '#374151',
+              borderWidth: 1,
+              padding: 10,
+              titleColor: '#fff',
+              bodyColor: '#e2e8f0'
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#94a3b8' }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#94a3b8' },
+              title: {
+                display: true,
+                text: 'Daily Waste in Kilograms (kg)',
+                color: '#64748b',
+                font: { size: 11 }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderCategoryChart() {
+      const ctx = document.getElementById("categoryChart");
+      if (!ctx) return;
+
+      const weights = appState.metrics?.category_weights || {
+        "Dairy/Curry": 14.5,
+        "Rice/Grains": 21.0,
+        "Rotis/Dry": 12.0
+      };
+
+      if (categoryChartInstance) {
+        categoryChartInstance.destroy();
+      }
+
+      categoryChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Dairy/Curry', 'Rice/Grains', 'Rotis/Dry'],
+          datasets: [{
+            data: [
+              weights['Dairy/Curry'] || 1,
+              weights['Rice/Grains'] || 1,
+              weights['Rotis/Dry'] || 1
+            ],
+            backgroundColor: [
+              '#f59e0b',
+              '#06b6d4',
+              '#10b981'
+            ],
+            borderColor: '#090d16',
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          cutout: '72%'
+        }
+      });
+    }
+
+    function copyImpactSummary() {
+      const m = appState.metrics || {};
+      const summary = `🏆 RePlate Campus Surplus Router — Arbiter Hackathon Pitch Telemetry
+---------------------------------------------------------------
+Campus Node: ${appState.hostel_name} (350 Hostellers)
+Total Food Diverted: ${(m.total_diverted_kg || 0).toFixed(1)} kg
+Nutritious Meals Served: ${m.meals_diverted || 0} meals (@ 400g/meal)
+Source Reduction Prevented: ${(m.pre_production_saved_kg || 0).toFixed(1)} kg (${(m.pre_meal_waste_cut_pct || 0).toFixed(1)}% cut)
+Surplus Recovery Rate: ${(m.surplus_recovery_rate_pct || 0).toFixed(1)}%
+Direct Mess Budget Saved: ₹${(m.money_saved_inr || 0).toLocaleString()}
+Carbon Landfill Emissions Avoided: ${(m.co2_saved_kg || 0).toFixed(1)} kg CO2e
+---------------------------------------------------------------`;
+      navigator.clipboard.writeText(summary).then(() => {
+        showToast("Impact summary copied to clipboard for pitch deck!", "success");
+      });
+    }
+
+    // ==========================================
+    // 5. GLOBAL & MODAL CONTROLS
+    // ==========================================
+    function openDiscordModal() {
+      document.getElementById("discordModal").classList.remove("hidden");
+      document.getElementById("discordModal").classList.add("flex");
+    }
+
+    function closeDiscordModal() {
+      document.getElementById("discordModal").classList.add("hidden");
+      document.getElementById("discordModal").classList.remove("flex");
+    }
+
+    async function saveDiscordWebhook() {
+      const url = document.getElementById("discordWebhookInput").value.trim();
+      try {
+        const res = await fetch("/api/update-config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ discord_webhook_url: url })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          appState.discord_configured = data.discord_configured;
+          updateDiscordLabel();
+          closeDiscordModal();
+          showToast(url ? "Discord webhook configured!" : "Discord webhook cleared", "success");
+        }
+      } catch (err) {
+        showToast("Failed to save webhook config", "error");
+      }
+    }
+
+    function updateDiscordLabel() {
+      const label = document.getElementById("discordStatusLabel");
+      if (label) {
+        label.textContent = appState.discord_configured ? "Discord: Connected" : "Discord Bot";
+      }
+    }
+
+    async function resetDemoState() {
+      if (!confirm("Reset all RePlate demo batches and headcount forecasts to clean initial state?")) return;
+      try {
+        const res = await fetch("/api/reset-demo", { method: "POST" });
+        const data = await res.json();
+        if (data.status === "success") {
+          appState.batches = data.batches;
+          appState.current_rsvp = data.current_rsvp;
+          appState.historical_baseline = data.historical_baseline;
+          appState.metrics = data.metrics;
+          syncUI();
+          renderCharts();
+          showToast("Demo data refreshed to clean state", "success");
+        }
+      } catch (err) {
+        showToast("Failed to reset demo state", "error");
+      }
+    }
+
+    function showToast(message, type = "info") {
+      const container = document.getElementById("toastContainer");
+      if (!container) return;
+
+      const toast = document.createElement("div");
+      let borderCol = "border-emerald-500/50";
+      let icon = "✅";
+      if (type === "error") {
+        borderCol = "border-rose-500/50";
+        icon = "❌";
+      }
+
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900 text-white text-xs font-semibold border ${borderCol} shadow-2xl transition transform duration-200`;
+      toast.innerHTML = `<span>${icon}</span><span>${escapeHtml(message)}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateY(10px)";
+        setTimeout(() => toast.remove(), 250);
+      }, 3500);
+    }
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return text.toString().replace(/[&<>"']/g, m => map[m]);
+    }
+  </script>
+</body>
+</html>
