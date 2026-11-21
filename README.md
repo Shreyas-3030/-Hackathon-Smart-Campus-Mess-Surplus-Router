@@ -1,6 +1,6 @@
 # RePlate — Smart Campus Mess Surplus Router 🍲🌱
 
-> **Arbiter Hacks Hackathon MVP**  
+> **Built for Arbiter Hacks V1 Hackathon**  
 > *Closing the loop on campus dining waste: Source Reduction (Kitchen Prep Forecasting) + Real-time Surplus Rescue (NGO Routing).*
 
 ---
