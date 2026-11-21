@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RePlate — Smart Campus Mess Surplus Router</title>
+  <title>RePlate — Campus Surplus Router</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
@@ -14,712 +14,448 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              50: '#ecfdf5',
-              100: '#d1fae5',
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              900: '#064e3b',
-              950: '#022c22',
-            },
-            darkbg: '#090d16',
-            cardbg: '#111827',
-            cardborder: '#1f2937',
-            surface: '#151f32'
+            app: {
+              bg: '#0B0F17',
+              surface: '#111622',
+              surfaceHover: '#161C2B',
+              border: '#1E2638',
+              borderHover: '#2D374E',
+              muted: '#64748B',
+              text: '#F1F5F9',
+              accent: '#10B981',
+              accentHover: '#059669',
+              accentMuted: 'rgba(16, 185, 129, 0.12)'
+            }
           }
         }
       }
     }
   </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: #090d16;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #0B0F17;
+      color: #F1F5F9;
     }
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
+    input[type=range] {
+      -webkit-appearance: none;
+      background: #1E2638;
+      border-radius: 9999px;
       height: 6px;
     }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #10B981;
+      cursor: pointer;
+      border: 2px solid #0B0F17;
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+      transition: transform 0.1s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
     ::-webkit-scrollbar-track {
-      background: #090d16;
+      background: #0B0F17;
     }
     ::-webkit-scrollbar-thumb {
-      background: #1f2937;
+      background: #1E2638;
       border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #10b981;
-    }
-    .glass-card {
-      background: rgba(17, 24, 39, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-    }
-    .glass-card-hover:hover {
-      border-color: rgba(16, 185, 129, 0.35);
-      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.08);
-    }
-    .pulse-ring {
-      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-    }
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.05); opacity: 0.4; }
-      100% { transform: scale(0.95); opacity: 0.8; }
     }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+<body class="min-h-screen flex flex-col selection:bg-emerald-500/30 selection:text-emerald-200">
 
-  <!-- TOP NAVIGATION HEADER -->
-  <header class="border-b border-slate-800/80 bg-darkbg/90 backdrop-blur sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+  <!-- TOP HEADER -->
+  <header class="border-b border-app-border bg-app-bg/95 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       
-      <!-- Logo & Campus Info -->
+      <!-- Brand & Location -->
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white font-black text-xl">
-          ⟲
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
+          RP
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">RePlate</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">Campus Router</span>
+            <span class="font-bold text-sm tracking-tight text-white">RePlate</span>
+            <span class="text-xs text-app-muted">/</span>
+            <span class="text-xs font-medium text-slate-300">Robin Hood Hostel</span>
           </div>
-          <p class="text-xs text-slate-400 flex items-center gap-1.5 font-medium">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            Robin Hood Hostel Mess <span class="text-slate-600">|</span> Node #01 (350 Capacity)
-          </p>
+          <span class="text-[11px] text-app-muted">Mess Capacity: 350 Diners</span>
         </div>
       </div>
 
-      <!-- Live Monitoring Indicators & Quick Actions -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Live heartbeat indicator -->
-        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-slate-800 text-xs font-mono text-slate-300">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span id="liveClock" class="font-semibold text-emerald-400">--:--:--</span>
+      <!-- Live Dot & Controls -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Live</span>
         </div>
 
-        <!-- Discord Webhook Button -->
-        <button onclick="openDiscordModal()" title="Configure Discord Webhook Notifications" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-xs font-medium text-slate-300 transition">
-          <svg class="w-4 h-4 text-indigo-400" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
-          <span class="hidden md:inline" id="discordStatusLabel">Discord Bot</span>
-        </button>
-
-        <!-- Reset Demo Button -->
-        <button onclick="resetDemoState()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold transition active:scale-95 shadow-sm">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-          <span>Reset Demo</span>
+        <button onclick="resetDemoState()" class="text-xs text-slate-400 hover:text-slate-200 px-2.5 py-1 rounded-md hover:bg-app-surface transition border border-transparent hover:border-app-border">
+          Reset Demo
         </button>
       </div>
+
     </div>
 
-    <!-- MAIN 4 NAVIGATION TABS -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-800/60 bg-darkbg">
-      <nav class="flex space-x-2 sm:space-x-8 overflow-x-auto py-2.5" aria-label="Tabs">
-        <!-- Tab 1: Kitchen Predictor -->
-        <button onclick="switchTab('tab-predictor')" id="btn-tab-predictor" class="tab-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-          <span class="text-base">🍳</span>
-          <span>1. Kitchen Predictor</span>
-          <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-500/30 text-emerald-300">PREVENTION</span>
+    <!-- CLEAN NAVIGATION BAR -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 border-t border-app-border/60">
+      <nav class="flex space-x-1 sm:space-x-2 py-2 overflow-x-auto text-xs" aria-label="Tabs">
+        <button onclick="switchTab('tab-predictor')" id="btn-tab-predictor" class="tab-btn px-3 py-1.5 rounded-md font-medium transition text-emerald-400 bg-emerald-500/10 border border-emerald-500/30">
+          Kitchen Planner
         </button>
-
-        <!-- Tab 2: Surplus Logger -->
-        <button onclick="switchTab('tab-logger')" id="btn-tab-logger" class="tab-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
-          <span class="text-base">🍲</span>
-          <span>2. Surplus Logger</span>
-          <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300">TRIAGE</span>
+        <button onclick="switchTab('tab-logger')" id="btn-tab-logger" class="tab-btn px-3 py-1.5 rounded-md font-medium transition text-slate-400 hover:text-slate-200 hover:bg-app-surface border border-transparent">
+          Log Surplus
         </button>
-
-        <!-- Tab 3: NGO Rescue Portal -->
-        <button onclick="switchTab('tab-rescue')" id="btn-tab-rescue" class="tab-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
-          <span class="text-base">🚚</span>
-          <span>3. NGO Rescue Portal</span>
-          <span id="activeBadgeCount" class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300">3 ACTIVE</span>
+        <button onclick="switchTab('tab-rescue')" id="btn-tab-rescue" class="tab-btn px-3 py-1.5 rounded-md font-medium transition text-slate-400 hover:text-slate-200 hover:bg-app-surface border border-transparent flex items-center gap-1.5">
+          <span>Active Batches</span>
+          <span id="activeBadgeCount" class="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-slate-800 text-slate-300">3</span>
         </button>
-
-        <!-- Tab 4: Impact Metrics -->
-        <button onclick="switchTab('tab-impact')" id="btn-tab-impact" class="tab-btn flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold whitespace-nowrap transition text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border border-transparent">
-          <span class="text-base">📊</span>
-          <span>4. Impact Metrics</span>
-          <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-purple-500/20 text-purple-300">JUDGES' VIEW</span>
+        <button onclick="switchTab('tab-impact')" id="btn-tab-impact" class="tab-btn px-3 py-1.5 rounded-md font-medium transition text-slate-400 hover:text-slate-200 hover:bg-app-surface border border-transparent">
+          Analytics & Impact
         </button>
       </nav>
     </div>
   </header>
 
-  <!-- MAIN VIEWPORT CONTENT -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6">
 
-    <!-- ========================================================================= -->
-    <!-- TAB 1: KITCHEN PREDICTOR (PREVENTION) -->
-    <!-- ========================================================================= -->
-    <div id="tab-predictor" class="tab-panel space-y-6">
+    <!-- ========================================== -->
+    <!-- TAB 1: KITCHEN PLANNER -->
+    <!-- ========================================== -->
+    <div id="tab-predictor" class="tab-panel space-y-5">
       
-      <!-- Top Banner Header -->
-      <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
-        <div class="absolute -right-16 -top-16 w-56 h-56 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="max-w-3xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
-            <span>🛡️ Source Reduction Engine</span>
-            <span>•</span>
-            <span>Prevention > Redistribution</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Intelligent Kitchen Headcount & Batch Size Optimizer
-          </h2>
-          <p class="text-slate-400 text-sm mt-2 leading-relaxed">
-            By collecting student meal opt-outs prior to evening prep, RePlate recalculates exact raw grain, dairy, and produce requirements—preventing food from ever being over-cooked in the first place (saving <strong class="text-emerald-400">0.45 kg raw food</strong> per skipped meal).
-          </p>
-        </div>
-      </div>
-
-      <!-- Interactive Forecasting Workspace -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        <!-- Interactive Controls (Left 7 Cols) -->
-        <div class="lg:col-span-7 glass-card rounded-2xl p-6 space-y-6">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-            <div>
-              <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                <span>Tonight's Dinner RSVP Opt-Outs</span>
-              </h3>
-              <p class="text-xs text-slate-400">Total registered hostel capacity: 350 hostellers</p>
-            </div>
-            <div class="text-right">
-              <span id="optOutCountDisplay" class="text-3xl font-extrabold font-mono text-emerald-400">45</span>
-              <span class="text-xs text-slate-400 block">Students Skipping</span>
-            </div>
-          </div>
-
-          <!-- Slider Input -->
-          <div class="space-y-3">
-            <div class="flex justify-between text-xs font-medium text-slate-400">
-              <span>0 (Full 350 Capacity)</span>
-              <span>175 (Half Strength)</span>
-              <span>350 (No Diners)</span>
-            </div>
-            <input type="range" id="rsvpSlider" min="0" max="350" value="45"
-                   class="w-full h-3 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none"
-                   oninput="handleSliderChange(this.value)" onchange="commitRsvp(this.value)">
-          </div>
-
-          <!-- Quick Simulation Buttons -->
-          <div>
-            <label class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">⚡ Quick Scenario Presets</label>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <button onclick="setRsvpOptOuts(25)" class="px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-emerald-600/20 hover:border-emerald-500/40 border border-slate-700/60 text-xs font-semibold text-slate-200 transition text-center">
-                Simulate 25 Skipping
-              </button>
-              <button onclick="adjustRsvpDelta(10)" class="px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-emerald-600/20 hover:border-emerald-500/40 border border-slate-700/60 text-xs font-semibold text-slate-200 transition text-center">
-                +10 Late Diners
-              </button>
-              <button onclick="setRsvpOptOuts(80)" class="px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-emerald-600/20 hover:border-emerald-500/40 border border-slate-700/60 text-xs font-semibold text-slate-200 transition text-center">
-                Weekend Out (80)
-              </button>
-              <button onclick="setRsvpOptOuts(0)" class="px-3 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-semibold text-rose-300 transition text-center">
-                Reset RSVP (0)
-              </button>
-            </div>
-          </div>
-
-          <!-- Visual Progress Comparison Bar -->
-          <div class="pt-2 space-y-2">
-            <div class="flex justify-between text-xs text-slate-300">
-              <span>Standard Cooking Target: <strong id="stdTargetDisplay">157.5 kg</strong></span>
-              <span class="text-emerald-400">Saved: <strong id="savedRawDisplay">20.25 kg</strong> raw ingredients</span>
-            </div>
-            <div class="w-full bg-slate-800/90 rounded-full h-4 p-0.5 flex overflow-hidden border border-slate-700">
-              <div id="prepBarActive" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-300" style="width: 87%;"></div>
-              <div id="prepBarSaved" class="bg-emerald-950/60 border-l border-emerald-500/50 h-full transition-all duration-300 flex items-center justify-center text-[9px] font-bold text-emerald-400" style="width: 13%;">
-                SAVED
-              </div>
-            </div>
-            <p class="text-[11px] text-slate-500">Green shows active kitchen target; dark stripe indicates raw pantry items kept in stock.</p>
-          </div>
-
-          <!-- Live Chef Advisory Box -->
-          <div class="bg-surface/80 rounded-xl p-4 border border-slate-800 flex items-start gap-3">
-            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex-shrink-0 flex items-center justify-center text-emerald-400 text-sm">
-              👨‍🍳
-            </div>
-            <div>
-              <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Kitchen Prep Directive for Evening Head Chef:</h4>
-              <p id="chefAdvisoryText" class="text-xs text-slate-300 mt-1 leading-relaxed">
-                Reduce Rice Cooker Vessel #2 by 12 kg. Hold back 90 dough balls for breakfast rolling. Do not simmer batch 3 of Dal Tadka.
-              </p>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Calculated Live Metrics (Right 5 Cols) -->
-        <div class="lg:col-span-5 space-y-4">
-          
-          <!-- Card: Expected Diners -->
-          <div class="glass-card rounded-2xl p-5 border-l-4 border-l-emerald-500">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Expected Diners Tonight</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">Live Forecast</span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="expectedDinersVal" class="text-4xl font-extrabold font-mono text-white">305</span>
-              <span class="text-sm text-slate-400">/ 350 Hostellers</span>
-            </div>
-            <p class="text-xs text-slate-400 mt-1">Directly fed from student mobile opt-out toggles.</p>
-          </div>
-
-          <!-- Card: Recommended Prep Weight -->
-          <div class="glass-card rounded-2xl p-5 border-l-4 border-l-cyan-500">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Recommended Prep Batch Size</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-300">Optimized</span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="optimizedTargetVal" class="text-4xl font-extrabold font-mono text-cyan-400">137.25</span>
-              <span class="text-sm text-slate-300">kg</span>
-            </div>
-            <p class="text-xs text-slate-400 mt-1">Down from unoptimized baseline of <span id="baselineTargetText">157.5 kg</span>.</p>
-          </div>
-
-          <!-- Card: Raw Food Prevented -->
-          <div class="glass-card rounded-2xl p-5 border-l-4 border-l-teal-500">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pre-Production Waste Prevented</span>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400">Pantry Retained</span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-              <span id="preSavedKgVal" class="text-4xl font-extrabold font-mono text-emerald-400">20.25</span>
-              <span class="text-sm text-slate-300">kg food</span>
-            </div>
-            <div class="mt-3 pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-xs">
-              <div>
-                <span class="text-slate-500 block">Procurement Saved:</span>
-                <span id="preMoneySavedVal" class="font-bold text-slate-200">₹1,721</span>
-              </div>
-              <div>
-                <span class="text-slate-500 block">Carbon Avoided:</span>
-                <span id="preCo2SavedVal" class="font-bold text-teal-400">50.6 kg CO₂e</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- TAB 2: SURPLUS LOGGER (TRIAGE) -->
-    <!-- ========================================================================= -->
-    <div id="tab-logger" class="tab-panel hidden space-y-6">
-      
-      <!-- Top Banner Header -->
-      <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
-        <div class="max-w-3xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 mb-3">
-            <span>⚡ Rapid Kitchen Closing Triage</span>
-            <span>•</span>
-            <span>2-Tap Logging & Auto-Expiry</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Log Remaining Trays & Broadcast Pickup Call
-          </h2>
-          <p class="text-slate-400 text-sm mt-2 leading-relaxed">
-            When dinner ends, mess supervisors log excess trays in under 15 seconds. RePlate assigns strict microbiological shelf-life countdowns and generates a tamper-proof 4-digit handover OTP.
-          </p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
-        <!-- Form Column (Left 7 Cols) -->
-        <div class="lg:col-span-7 glass-card rounded-2xl p-6 space-y-6">
-          <form id="surplusForm" onsubmit="handleLogSurplus(event)" class="space-y-5">
-            
-            <!-- Food Description Input -->
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                1. Food Item & Tray Description
-              </label>
-              <input type="text" id="foodItemsInput" required
-                     placeholder="e.g., Dal Tadka & Steamed Jeera Rice (2 Large Trays)"
-                     class="w-full px-4 py-3 rounded-xl bg-surface border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition text-sm">
-              <!-- Quick Chips -->
-              <div class="flex flex-wrap gap-1.5 mt-2">
-                <button type="button" onclick="fillDishDescription('Paneer Butter Masala & Phulkas')" class="px-2.5 py-1 rounded-lg bg-slate-800 text-[11px] text-slate-300 hover:text-emerald-400 hover:bg-slate-700 transition">
-                  Paneer Butter Masala
-                </button>
-                <button type="button" onclick="fillDishDescription('Moong Dal Tadka & Rice')" class="px-2.5 py-1 rounded-lg bg-slate-800 text-[11px] text-slate-300 hover:text-emerald-400 hover:bg-slate-700 transition">
-                  Dal & Rice
-                </button>
-                <button type="button" onclick="fillDishDescription('Tawa Rotis (100 pcs)')" class="px-2.5 py-1 rounded-lg bg-slate-800 text-[11px] text-slate-300 hover:text-emerald-400 hover:bg-slate-700 transition">
-                  Tawa Rotis
-                </button>
-                <button type="button" onclick="fillDishDescription('Veg Biryani & Mix Veg')" class="px-2.5 py-1 rounded-lg bg-slate-800 text-[11px] text-slate-300 hover:text-emerald-400 hover:bg-slate-700 transition">
-                  Veg Biryani
-                </button>
-              </div>
-            </div>
-
-            <!-- Category Radio Cards -->
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                2. Category & Micro-Biological Safe Window
-              </label>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                
-                <!-- Category 1: Dairy/Curry -->
-                <label class="category-card cursor-pointer rounded-xl p-3.5 border border-slate-700/80 bg-surface hover:border-amber-500/50 transition block relative">
-                  <input type="radio" name="foodCategory" value="Dairy/Curry" class="hidden" onchange="updateShelfLifePreview('Dairy/Curry')">
-                  <div class="flex items-center gap-2">
-                    <span class="text-xl">🍲</span>
-                    <div>
-                      <h4 class="text-xs font-bold text-white">Dairy / Curry</h4>
-                      <p class="text-[10px] text-amber-400 font-semibold mt-0.5">⏱ 2hr Safe Window</p>
-                    </div>
-                  </div>
-                  <p class="text-[10px] text-slate-400 mt-2">Paneer, gravies, milk sweets. High spoilage risk.</p>
-                </label>
-
-                <!-- Category 2: Rice/Grains -->
-                <label class="category-card cursor-pointer rounded-xl p-3.5 border-2 border-emerald-500 bg-emerald-500/10 transition block relative">
-                  <input type="radio" name="foodCategory" value="Rice/Grains" checked class="hidden" onchange="updateShelfLifePreview('Rice/Grains')">
-                  <div class="flex items-center gap-2">
-                    <span class="text-xl">🍚</span>
-                    <div>
-                      <h4 class="text-xs font-bold text-white">Rice & Grains</h4>
-                      <p class="text-[10px] text-cyan-400 font-semibold mt-0.5">⏱ 4hr Safe Window</p>
-                    </div>
-                  </div>
-                  <p class="text-[10px] text-slate-400 mt-2">Pulao, dal-chawal, khichdi. Medium perishability.</p>
-                </label>
-
-                <!-- Category 3: Rotis/Dry -->
-                <label class="category-card cursor-pointer rounded-xl p-3.5 border border-slate-700/80 bg-surface hover:border-emerald-500/50 transition block relative">
-                  <input type="radio" name="foodCategory" value="Rotis/Dry" class="hidden" onchange="updateShelfLifePreview('Rotis/Dry')">
-                  <div class="flex items-center gap-2">
-                    <span class="text-xl">🫓</span>
-                    <div>
-                      <h4 class="text-xs font-bold text-white">Rotis & Dry</h4>
-                      <p class="text-[10px] text-emerald-400 font-semibold mt-0.5">⏱ 6hr Safe Window</p>
-                    </div>
-                  </div>
-                  <p class="text-[10px] text-slate-400 mt-2">Phulkas, theplas, dry subji. Low moisture.</p>
-                </label>
-
-              </div>
-            </div>
-
-            <!-- Weight Input & Quick Steppers -->
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-                3. Net Weight (kg)
-              </label>
-              <div class="flex items-center gap-3">
-                <input type="number" id="weightKgInput" required step="0.5" min="1" max="100" value="15.0"
-                       class="w-36 px-4 py-3 rounded-xl bg-surface border border-slate-700 text-white font-mono font-bold text-lg focus:outline-none focus:border-emerald-500 transition">
-                <span class="text-sm font-semibold text-slate-400">kg</span>
-                
-                <!-- Fast Chips -->
-                <div class="flex gap-1.5">
-                  <button type="button" onclick="setWeightInput(5)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">+5</button>
-                  <button type="button" onclick="setWeightInput(10)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">+10</button>
-                  <button type="button" onclick="setWeightInput(15)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">+15</button>
-                  <button type="button" onclick="setWeightInput(25)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs font-semibold text-slate-300 hover:bg-slate-700">+25</button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Expiry Preview Alert Box -->
-            <div class="bg-surface/90 rounded-xl p-3.5 border border-slate-800 flex items-center justify-between text-xs">
-              <div class="flex items-center gap-2">
-                <span class="text-amber-400 text-base">⏳</span>
-                <span class="text-slate-300">Strict Safe Consumption Until:</span>
-              </div>
-              <span id="previewExpiryTime" class="font-mono font-bold text-emerald-400 text-sm">--:-- --</span>
-            </div>
-
-            <!-- Submit & Simulate Buttons -->
-            <div class="flex flex-col sm:flex-row gap-3 pt-2">
-              <button type="submit" id="btnLogSurplus" class="flex-1 py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 transition active:scale-95 flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                <span>Log Surplus & Generate Security OTP</span>
-              </button>
-              
-              <button type="button" onclick="simulateDemoSurplus()" class="py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition flex items-center justify-center gap-1.5 active:scale-95 whitespace-nowrap">
-                <span>⚡ Simulate Demo Surplus</span>
-              </button>
-            </div>
-
-          </form>
-        </div>
-
-        <!-- Info / Guidelines Column (Right 5 Cols) -->
-        <div class="lg:col-span-5 space-y-4">
-          
-          <div class="glass-card rounded-2xl p-5 border-l-4 border-l-amber-500">
-            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <span>🛡️ FSSAI Food Safety Compliance</span>
-            </h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              Every surplus batch logged into RePlate is assigned a cold-chain/ambient countdown based on Indian Food Safety regulations. Once the timer reaches 00:00:00, the batch is automatically transitioned to <strong class="text-rose-400">"Expired"</strong> to prevent unsafe consumption.
-            </p>
-          </div>
-
-          <!-- Shelf Life Table -->
-          <div class="glass-card rounded-2xl p-5 space-y-3">
-            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Perishability Triage Rules</h4>
-            <div class="space-y-2 text-xs">
-              <div class="flex items-center justify-between p-2 rounded-lg bg-surface border border-slate-800">
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                  <span class="font-medium text-slate-200">Dairy / Gravy / Paneer</span>
-                </div>
-                <span class="font-mono font-bold text-amber-400">2 Hours Max</span>
-              </div>
-              <div class="flex items-center justify-between p-2 rounded-lg bg-surface border border-slate-800">
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-                  <span class="font-medium text-slate-200">Rice, Grains & Khichdi</span>
-                </div>
-                <span class="font-mono font-bold text-cyan-400">4 Hours Max</span>
-              </div>
-              <div class="flex items-center justify-between p-2 rounded-lg bg-surface border border-slate-800">
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                  <span class="font-medium text-slate-200">Rotis, Chapatis & Dry Subji</span>
-                </div>
-                <span class="font-mono font-bold text-emerald-400">6 Hours Max</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Security Notice -->
-          <div class="glass-card rounded-2xl p-5 border border-slate-800">
-            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <span>🔐 OTP Handover Protocol</span>
-            </h4>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              When an NGO claims a batch, a random 4-digit token is locked. The mess security guard verifies this OTP upon NGO van arrival at Robin Hood Hostel back gate before releasing the trays.
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- TAB 3: NGO RESCUE PORTAL (REDISTRIBUTION) -->
-    <!-- ========================================================================= -->
-    <div id="tab-rescue" class="tab-panel hidden space-y-6">
-      
-      <!-- Top Banner Header -->
-      <div class="glass-card rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="max-w-2xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 mb-3">
-            <span>🚚 Real-Time Redistribution Feed</span>
-            <span>•</span>
-            <span>Live Ticking Timers</span>
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Active Campus Surplus Batches
-          </h2>
-          <p class="text-slate-400 text-sm mt-1 leading-relaxed">
-            Registered partner NGOs claim available batches for immediate transit to local hunger shelters. Real-time countdown prevents bacterial spoilage.
-          </p>
-        </div>
-
-        <!-- Filter Chips -->
-        <div class="flex flex-wrap gap-2">
-          <button onclick="setBatchFilter('all')" id="filter-all" class="batch-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-white border border-slate-700">
-            All (<span id="count-all">4</span>)
-          </button>
-          <button onclick="setBatchFilter('Available')" id="filter-Available" class="batch-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-            Available (<span id="count-available">3</span>)
-          </button>
-          <button onclick="setBatchFilter('Claimed')" id="filter-Claimed" class="batch-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200">
-            Claimed (<span id="count-claimed">1</span>)
-          </button>
-          <button onclick="setBatchFilter('Expired')" id="filter-Expired" class="batch-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-slate-200">
-            Expired (<span id="count-expired">0</span>)
-          </button>
-        </div>
-      </div>
-
-      <!-- Batches Grid Container -->
-      <div id="batchesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Rendered dynamically by JavaScript -->
-      </div>
-
-    </div>
-
-    <!-- ========================================================================= -->
-    <!-- TAB 4: IMPACT METRICS (JUDGES' VIEW) -->
-    <!-- ========================================================================= -->
-    <div id="tab-impact" class="tab-panel hidden space-y-6">
-      
-      <!-- Top Banner Header -->
-      <div class="glass-card rounded-2xl p-6 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/20 mb-2">
-            <span>🏆 Arbiter Hackathon Pitch Telemetry</span>
-            <span>•</span>
-            <span>Measurable Verified ESG Impact</span>
+          <h1 class="text-lg font-bold text-white tracking-tight">Kitchen Headcount & Prep Planning</h1>
+          <p class="text-xs text-app-muted mt-0.5">Calculate dinner batch sizes from student opt-outs to prevent cooking surplus.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left: Controls -->
+        <div class="lg:col-span-7 bg-app-surface border border-app-border rounded-xl p-5 space-y-5">
+          
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Tonight's Student Opt-Outs</span>
+            <div class="text-right">
+              <span id="optOutCountDisplay" class="text-2xl font-bold font-mono text-emerald-400">45</span>
+              <span class="text-xs text-app-muted ml-1">students</span>
+            </div>
           </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            RePlate Closed-Loop Impact Telemetry
-          </h2>
-          <p class="text-slate-400 text-sm mt-1">
-            Real-time data proving source reduction (Kitchen Predictor) + secondary recovery (NGO Rescue).
-          </p>
+
+          <!-- Slider -->
+          <div class="space-y-2">
+            <input type="range" id="rsvpSlider" min="0" max="350" value="45"
+                   class="w-full cursor-pointer"
+                   oninput="handleSliderChange(this.value)" onchange="commitRsvp(this.value)">
+            <div class="flex justify-between text-[11px] text-app-muted font-mono">
+              <span>0 (Full 350)</span>
+              <span>175</span>
+              <span>350</span>
+            </div>
+          </div>
+
+          <!-- Quick presets -->
+          <div>
+            <span class="text-[11px] text-app-muted block mb-2 font-medium">Quick adjustments:</span>
+            <div class="flex flex-wrap gap-2">
+              <button onclick="setRsvpOptOuts(25)" class="px-2.5 py-1.5 rounded-md bg-app-bg hover:bg-app-border text-xs text-slate-300 border border-app-border transition">
+                25 students out
+              </button>
+              <button onclick="adjustRsvpDelta(15)" class="px-2.5 py-1.5 rounded-md bg-app-bg hover:bg-app-border text-xs text-slate-300 border border-app-border transition">
+                +15 more
+              </button>
+              <button onclick="setRsvpOptOuts(75)" class="px-2.5 py-1.5 rounded-md bg-app-bg hover:bg-app-border text-xs text-slate-300 border border-app-border transition">
+                Weekend leave (75)
+              </button>
+              <button onclick="setRsvpOptOuts(0)" class="px-2.5 py-1.5 rounded-md bg-app-bg hover:bg-app-border text-xs text-rose-400 border border-app-border transition">
+                Reset to 0
+              </button>
+            </div>
+          </div>
+
+          <!-- Volume Progress -->
+          <div class="pt-2 border-t border-app-border/60 space-y-2">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-400">Prep Volume Reduction</span>
+              <span class="text-emerald-400 font-mono font-medium" id="prepPctText">13% saved</span>
+            </div>
+            <div class="w-full bg-app-bg rounded-full h-2 overflow-hidden border border-app-border">
+              <div id="prepBarActive" class="bg-emerald-500 h-full rounded-full transition-all duration-200" style="width: 87%;"></div>
+            </div>
+            <p id="chefDirectiveText" class="text-xs text-slate-400 leading-relaxed pt-1">
+              Reduce rice cooker volume by ~9 kg. Retain dry grains in pantry for next meal.
+            </p>
+          </div>
+
         </div>
 
-        <button onclick="copyImpactSummary()" class="px-4 py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/40 text-xs font-semibold flex items-center gap-2 transition active:scale-95 whitespace-nowrap">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-          <span>Copy Pitch Telemetry</span>
+        <!-- Right: Calculated Results -->
+        <div class="lg:col-span-5 space-y-3">
+          
+          <div class="bg-app-surface border border-app-border rounded-xl p-4">
+            <span class="text-xs text-app-muted uppercase font-semibold tracking-wider">Expected Diners Tonight</span>
+            <div class="mt-1 flex items-baseline gap-2">
+              <span id="expectedDinersVal" class="text-3xl font-bold font-mono text-white">305</span>
+              <span class="text-xs text-app-muted">of 350 registered hostellers</span>
+            </div>
+          </div>
+
+          <div class="bg-app-surface border border-app-border rounded-xl p-4">
+            <span class="text-xs text-app-muted uppercase font-semibold tracking-wider">Recommended Cooking Target</span>
+            <div class="mt-1 flex items-baseline gap-2">
+              <span id="optimizedTargetVal" class="text-3xl font-bold font-mono text-emerald-400">137.25</span>
+              <span class="text-xs text-slate-400">kg (down from 157.5 kg standard)</span>
+            </div>
+          </div>
+
+          <div class="bg-app-surface border border-app-border rounded-xl p-4">
+            <span class="text-xs text-app-muted uppercase font-semibold tracking-wider">Raw Ingredients Prevented</span>
+            <div class="mt-1 flex items-baseline gap-2">
+              <span id="preSavedKgVal" class="text-3xl font-bold font-mono text-white">20.25</span>
+              <span class="text-xs text-slate-400">kg kept in pantry</span>
+            </div>
+            <div class="mt-3 pt-3 border-t border-app-border/60 flex justify-between text-xs text-slate-400">
+              <span>Budget saved: <strong id="preMoneySavedVal" class="text-slate-200">₹1,721</strong></span>
+              <span>Emissions avoided: <strong id="preCo2SavedVal" class="text-slate-200">50.6 kg CO₂e</strong></span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: LOG SURPLUS -->
+    <!-- ========================================== -->
+    <div id="tab-logger" class="tab-panel hidden space-y-5">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-tight">Log Kitchen Surplus</h1>
+          <p class="text-xs text-app-muted mt-0.5">Record leftover trays at shift close. Calculates shelf life and assigns a verification OTP.</p>
+        </div>
+        <button type="button" onclick="simulateDemoSurplus()" class="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-md bg-app-surface border border-app-border hover:border-slate-600 transition w-fit">
+          + Add Sample Batch
         </button>
       </div>
 
-      <!-- 4 BIG HERO KPI CARDS -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="max-w-2xl bg-app-surface border border-app-border rounded-xl p-6">
+        <form id="surplusForm" onsubmit="handleLogSurplus(event)" class="space-y-5">
+          
+          <!-- Dish Description -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Food Items / Dish Name</label>
+            <input type="text" id="foodItemsInput" required
+                   placeholder="e.g., Dal Tadka & Jeera Rice (2 trays)"
+                   class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-sm focus:outline-none focus:border-emerald-500 transition">
+          </div>
+
+          <!-- Category Selection -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Food Category & Safe Window</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              
+              <label class="category-radio cursor-pointer rounded-lg p-3 border border-app-border bg-app-bg hover:border-slate-600 transition block">
+                <input type="radio" name="foodCategory" value="Dairy/Curry" class="hidden" onchange="updateCategorySelection('Dairy/Curry')">
+                <div class="font-semibold text-xs text-white">Dairy / Curry</div>
+                <div class="text-[11px] text-amber-400 font-mono mt-0.5">2 hr shelf life</div>
+                <div class="text-[11px] text-app-muted mt-1">Gravy, paneer, milk items</div>
+              </label>
+
+              <label class="category-radio cursor-pointer rounded-lg p-3 border border-emerald-500 bg-emerald-500/10 transition block">
+                <input type="radio" name="foodCategory" value="Rice/Grains" checked class="hidden" onchange="updateCategorySelection('Rice/Grains')">
+                <div class="font-semibold text-xs text-white">Rice & Grains</div>
+                <div class="text-[11px] text-emerald-400 font-mono mt-0.5">4 hr shelf life</div>
+                <div class="text-[11px] text-app-muted mt-1">Khichdi, pulao, dal chawal</div>
+              </label>
+
+              <label class="category-radio cursor-pointer rounded-lg p-3 border border-app-border bg-app-bg hover:border-slate-600 transition block">
+                <input type="radio" name="foodCategory" value="Rotis/Dry" class="hidden" onchange="updateCategorySelection('Rotis/Dry')">
+                <div class="font-semibold text-xs text-white">Rotis / Dry Food</div>
+                <div class="text-[11px] text-emerald-400 font-mono mt-0.5">6 hr shelf life</div>
+                <div class="text-[11px] text-app-muted mt-1">Phulkas, theplas, dry subji</div>
+              </label>
+
+            </div>
+          </div>
+
+          <!-- Weight -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Net Weight (kg)</label>
+            <div class="flex items-center gap-3">
+              <input type="number" id="weightKgInput" required step="0.5" min="1" max="150" value="15.0"
+                     class="w-32 px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-base font-mono font-bold focus:outline-none focus:border-emerald-500 transition">
+              <span class="text-xs text-app-muted">kg</span>
+              <div class="flex gap-1.5 ml-2">
+                <button type="button" onclick="setWeightOffset(5)" class="px-2.5 py-1.5 rounded-md bg-app-bg hover:bg-app-border text-xs text-slate-300 border border-app-border">+5</button>
+                <button type="button" onclick="setWeightOffset(10)" class="px-2.5 py-1.5 rounded-md bg-app-bg hover:bg-app-border text-xs text-slate-300 border border-app-border">+10</button>
+                <button type="button" onclick="setWeightOffset(20)" class="px-2.5 py-1.5 rounded-md bg-app-bg hover:bg-app-border text-xs text-slate-300 border border-app-border">+20</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="p-3 rounded-lg bg-app-bg border border-app-border flex items-center justify-between text-xs">
+            <span class="text-app-muted">Safe consumption window:</span>
+            <span id="previewWindowText" class="font-mono font-medium text-emerald-400">Until --:--</span>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" id="btnLogSubmit" class="w-full py-2.5 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-semibold text-sm transition">
+            Log Surplus Batch
+          </button>
+
+        </form>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: ACTIVE BATCHES & REDISTRIBUTION -->
+    <!-- ========================================== -->
+    <div id="tab-rescue" class="tab-panel hidden space-y-5">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 class="text-lg font-bold text-white tracking-tight">Active Surplus Batches</h1>
+          <p class="text-xs text-app-muted mt-0.5">Live inventory for registered partner NGOs. Timers track spoilage window.</p>
+        </div>
+
+        <!-- Filter Segment -->
+        <div class="flex items-center bg-app-surface border border-app-border rounded-lg p-0.5 text-xs">
+          <button onclick="setBatchFilter('all')" id="filter-all" class="batch-filter-btn px-2.5 py-1 rounded-md text-white bg-app-border">
+            All
+          </button>
+          <button onclick="setBatchFilter('Available')" id="filter-Available" class="batch-filter-btn px-2.5 py-1 rounded-md text-slate-400 hover:text-white">
+            Available
+          </button>
+          <button onclick="setBatchFilter('Claimed')" id="filter-Claimed" class="batch-filter-btn px-2.5 py-1 rounded-md text-slate-400 hover:text-white">
+            Claimed
+          </button>
+          <button onclick="setBatchFilter('Expired')" id="filter-Expired" class="batch-filter-btn px-2.5 py-1 rounded-md text-slate-400 hover:text-white">
+            Expired
+          </button>
+        </div>
+      </div>
+
+      <!-- Batches Grid -->
+      <div id="batchesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered by JS -->
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: ANALYTICS & IMPACT -->
+    <!-- ========================================== -->
+    <div id="tab-impact" class="tab-panel hidden space-y-5">
+      
+      <div>
+        <h1 class="text-lg font-bold text-white tracking-tight">Impact & Waste Analytics</h1>
+        <p class="text-xs text-app-muted mt-0.5">Measured food waste prevention, recovery rate, and environmental savings.</p>
+      </div>
+
+      <!-- 4 Core Metrics -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
         
-        <!-- KPI 1: Total Kg Diverted -->
-        <div class="glass-card rounded-2xl p-5 border-t-4 border-t-emerald-500 relative overflow-hidden">
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Food Diverted</span>
-            <span class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-sm">⚖️</span>
+        <div class="bg-app-surface border border-app-border rounded-xl p-4">
+          <span class="text-xs font-semibold text-app-muted uppercase tracking-wider block">Total Food Diverted</span>
+          <div class="mt-1 flex items-baseline gap-1.5">
+            <span id="kpiTotalDiverted" class="text-2xl font-bold font-mono text-white">38.3</span>
+            <span class="text-xs text-app-muted">kg</span>
           </div>
-          <div class="mt-3 flex items-baseline gap-2">
-            <span id="kpiTotalDiverted" class="text-3xl sm:text-4xl font-extrabold font-mono text-emerald-400">38.25</span>
-            <span class="text-sm font-semibold text-slate-300">kg</span>
-          </div>
-          <p class="text-xs text-slate-400 mt-2">
-            <span id="kpiBreakdownText" class="text-emerald-300 font-medium">20.25kg prevented</span> + <span id="kpiRescuedText" class="text-cyan-300 font-medium">18.0kg rescued</span>
-          </p>
+          <span class="text-[11px] text-slate-400 mt-1 block" id="kpiBreakdownSubtext">20.3kg prevented + 18kg rescued</span>
         </div>
 
-        <!-- KPI 2: Meals Served -->
-        <div class="glass-card rounded-2xl p-5 border-t-4 border-t-cyan-500 relative overflow-hidden">
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Nutritious Meals Served</span>
-            <span class="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-sm">🍱</span>
+        <div class="bg-app-surface border border-app-border rounded-xl p-4">
+          <span class="text-xs font-semibold text-app-muted uppercase tracking-wider block">Meals Diverted</span>
+          <div class="mt-1 flex items-baseline gap-1.5">
+            <span id="kpiMealsServed" class="text-2xl font-bold font-mono text-emerald-400">96</span>
+            <span class="text-xs text-app-muted">portions</span>
           </div>
-          <div class="mt-3 flex items-baseline gap-2">
-            <span id="kpiMealsServed" class="text-3xl sm:text-4xl font-extrabold font-mono text-cyan-400">96</span>
-            <span class="text-sm font-semibold text-slate-300">meals</span>
-          </div>
-          <p class="text-xs text-slate-400 mt-2">Standardized @ 400g per balanced student meal.</p>
+          <span class="text-[11px] text-slate-400 mt-1 block">Standardized @ 400g/meal</span>
         </div>
 
-        <!-- KPI 3: Surplus Recovery Rate -->
-        <div class="glass-card rounded-2xl p-5 border-t-4 border-t-amber-500 relative overflow-hidden">
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Surplus Recovery Rate</span>
-            <span class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400 text-sm">🔄</span>
+        <div class="bg-app-surface border border-app-border rounded-xl p-4">
+          <span class="text-xs font-semibold text-app-muted uppercase tracking-wider block">Recovery Rate</span>
+          <div class="mt-1 flex items-baseline gap-1.5">
+            <span id="kpiRecoveryRate" class="text-2xl font-bold font-mono text-white">27.5</span>
+            <span class="text-xs text-app-muted">%</span>
           </div>
-          <div class="mt-3 flex items-baseline gap-2">
-            <span id="kpiRecoveryRate" class="text-3xl sm:text-4xl font-extrabold font-mono text-amber-400">27.5</span>
-            <span class="text-sm font-semibold text-slate-300">%</span>
-          </div>
-          <p class="text-xs text-slate-400 mt-2">Claimed vs. total logged mess surplus.</p>
+          <span class="text-[11px] text-slate-400 mt-1 block">Of logged leftover batches</span>
         </div>
 
-        <!-- KPI 4: Pre-Meal Waste Cut % -->
-        <div class="glass-card rounded-2xl p-5 border-t-4 border-t-purple-500 relative overflow-hidden">
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pre-Meal Waste Cut %</span>
-            <span class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 text-sm">📉</span>
+        <div class="bg-app-surface border border-app-border rounded-xl p-4">
+          <span class="text-xs font-semibold text-app-muted uppercase tracking-wider block">Pre-Cook Waste Cut</span>
+          <div class="mt-1 flex items-baseline gap-1.5">
+            <span id="kpiPreWasteCut" class="text-2xl font-bold font-mono text-emerald-400">12.9</span>
+            <span class="text-xs text-app-muted">%</span>
           </div>
-          <div class="mt-3 flex items-baseline gap-2">
-            <span id="kpiPreWasteCut" class="text-3xl sm:text-4xl font-extrabold font-mono text-purple-400">12.9</span>
-            <span class="text-sm font-semibold text-slate-300">%</span>
-          </div>
-          <p class="text-xs text-slate-400 mt-2">Direct kitchen source reduction from student RSVPs.</p>
+          <span class="text-[11px] text-slate-400 mt-1 block">Via student meal opt-outs</span>
         </div>
 
       </div>
 
-      <!-- Financial & ESG Co-Benefits Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        
-        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 border border-slate-800">
-          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl font-bold flex-shrink-0">
-            ₹
-          </div>
+      <!-- Financial & Carbon Details -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <div class="bg-app-surface border border-app-border rounded-xl p-4 flex items-center justify-between">
           <div>
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Campus Mess Budget Saved</span>
-            <div class="flex items-baseline gap-2 mt-0.5">
-              <span id="kpiMoneySaved" class="text-2xl font-bold font-mono text-white">₹3,251</span>
-              <span class="text-xs text-emerald-400">this cycle</span>
-            </div>
-            <p class="text-xs text-slate-400 mt-0.5">Calculated at average ₹85/kg wholesale raw commodity cost.</p>
+            <span class="text-xs font-semibold text-app-muted uppercase">Estimated Procurement Saved</span>
+            <div id="kpiMoneySaved" class="text-xl font-bold font-mono text-white mt-0.5">₹3,251</div>
           </div>
+          <span class="text-xs text-app-muted">Wholesale pantry value</span>
         </div>
 
-        <div class="glass-card rounded-2xl p-5 flex items-center gap-4 border border-slate-800">
-          <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400 text-2xl flex-shrink-0">
-            🌱
-          </div>
+        <div class="bg-app-surface border border-app-border rounded-xl p-4 flex items-center justify-between">
           <div>
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">CO₂e Landfill Emissions Prevented</span>
-            <div class="flex items-baseline gap-2 mt-0.5">
-              <span id="kpiCo2Saved" class="text-2xl font-bold font-mono text-teal-400">95.6 kg</span>
-              <span class="text-xs text-slate-400">GHG equivalent</span>
-            </div>
-            <p class="text-xs text-slate-400 mt-0.5">Using EPA WARM model (2.5 kg CO₂e avoided per kg food waste diverted).</p>
+            <span class="text-xs font-semibold text-app-muted uppercase">CO₂e Landfill Avoidance</span>
+            <div id="kpiCo2Saved" class="text-xl font-bold font-mono text-white mt-0.5">95.6 kg</div>
           </div>
+          <span class="text-xs text-app-muted">2.5 kg CO₂e / kg food</span>
         </div>
-
       </div>
 
-      <!-- CHART.JS VISUALIZATIONS -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Charts Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
-        <!-- Chart 1: 7-Day Baseline vs RePlate (8 Cols) -->
-        <div class="lg:col-span-8 glass-card rounded-2xl p-6 space-y-4">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
-            <div>
-              <h3 class="text-base font-bold text-white flex items-center gap-2">
-                <span>7-Day Pre-RePlate Baseline vs. Post-RePlate Reduction</span>
-              </h3>
-              <p class="text-xs text-slate-400">Comparing historical wasted kg prior to RePlate vs. current optimized waste</p>
-            </div>
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 w-fit">
-              -78.4% Waste Drop
-            </span>
+        <!-- 7-day chart (8 cols) -->
+        <div class="lg:col-span-8 bg-app-surface border border-app-border rounded-xl p-5 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-semibold text-slate-300">7-Day Waste Baseline vs. Post-RePlate Reduction</span>
+            <span class="text-[11px] font-mono text-emerald-400">-78% waste reduction</span>
           </div>
-
-          <div class="relative h-72 sm:h-80 w-full">
+          <div class="relative h-64 w-full">
             <canvas id="historicalChart"></canvas>
           </div>
         </div>
 
-        <!-- Chart 2: Category Breakdown (4 Cols) -->
-        <div class="lg:col-span-4 glass-card rounded-2xl p-6 space-y-4">
-          <div class="border-b border-slate-800 pb-3">
-            <h3 class="text-base font-bold text-white">Surplus Triage Mix</h3>
-            <p class="text-xs text-slate-400">Active distribution by perishability category</p>
-          </div>
-
-          <div class="relative h-56 w-full flex items-center justify-center">
+        <!-- Category Mix (4 cols) -->
+        <div class="lg:col-span-4 bg-app-surface border border-app-border rounded-xl p-5 space-y-3">
+          <span class="text-xs font-semibold text-slate-300 block">Surplus by Category</span>
+          <div class="relative h-48 w-full flex items-center justify-center">
             <canvas id="categoryChart"></canvas>
           </div>
-
-          <div id="categoryLegend" class="grid grid-cols-1 gap-2 pt-2 text-xs border-t border-slate-800/80">
-            <!-- Filled dynamically -->
+          <div id="categoryLegend" class="space-y-1.5 text-xs pt-1 border-t border-app-border/60">
+            <!-- Rendered by JS -->
           </div>
         </div>
 
@@ -729,101 +465,55 @@
 
   </main>
 
-  <!-- CLAIM RESCUE MODAL -->
-  <div id="claimModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card rounded-2xl max-w-md w-full p-6 space-y-5 border border-slate-700 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <span>🤝 Claim Food Rescue Pickup</span>
-        </h3>
-        <button onclick="closeClaimModal()" class="text-slate-400 hover:text-white transition text-lg">&times;</button>
+  <!-- CLAIM MODAL -->
+  <div id="claimModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs hidden items-center justify-center p-4">
+    <div class="bg-app-surface border border-app-border rounded-xl max-w-sm w-full p-5 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b border-app-border/80 pb-2.5">
+        <h3 class="text-sm font-semibold text-white">Claim Surplus Pickup</h3>
+        <button onclick="closeClaimModal()" class="text-slate-400 hover:text-white text-base leading-none">&times;</button>
       </div>
 
-      <div class="space-y-4">
+      <div class="space-y-3 text-xs">
         <div>
-          <span class="text-xs text-slate-400">Selected Batch:</span>
-          <div id="modalBatchTitle" class="font-bold text-emerald-400 text-sm mt-0.5">--</div>
-          <div id="modalBatchMeta" class="text-xs text-slate-300 font-mono mt-0.5">--</div>
+          <span class="text-app-muted block">Selected Batch</span>
+          <div id="modalBatchTitle" class="font-medium text-white text-sm mt-0.5">--</div>
+          <div id="modalBatchMeta" class="text-app-muted font-mono mt-0.5">--</div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-            Select Partner Rescue Organization
-          </label>
-          <select id="modalNgoSelect" class="w-full px-3 py-2.5 rounded-xl bg-surface border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500">
+          <label class="block font-medium text-slate-300 mb-1">Select Claiming Organization</label>
+          <select id="modalNgoSelect" class="w-full px-3 py-2 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:outline-none focus:border-emerald-500">
             <option value="Robin Hood Army Pune">Robin Hood Army Pune</option>
             <option value="Feeding India by Zomato">Feeding India by Zomato</option>
             <option value="Pune City Roti Bank">Pune City Roti Bank</option>
             <option value="Annamrita Foundation">Annamrita Foundation</option>
-            <option value="Good Samaritan Food Relief">Good Samaritan Food Relief</option>
           </select>
         </div>
-
-        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-300">
-          ⚠️ <strong>Strict Time Commitment:</strong> The claiming organization agrees to arrive at Robin Hood Hostel Mess Backgate before countdown expiry.
-        </div>
       </div>
 
-      <div class="flex gap-3 pt-2">
-        <button onclick="closeClaimModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold transition">
+      <div class="flex gap-2 pt-1">
+        <button onclick="closeClaimModal()" class="flex-1 py-2 rounded-lg bg-app-bg border border-app-border text-slate-300 hover:text-white text-xs font-medium transition">
           Cancel
         </button>
-        <button onclick="confirmClaim()" id="btnConfirmClaim" class="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white text-xs font-bold shadow-lg shadow-emerald-500/20 transition">
-          Confirm & Lock OTP
+        <button onclick="confirmClaim()" id="btnConfirmClaim" class="flex-1 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-900 text-xs font-semibold transition">
+          Confirm Claim
         </button>
       </div>
     </div>
   </div>
 
-  <!-- DISCORD WEBHOOK MODAL -->
-  <div id="discordModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="glass-card rounded-2xl max-w-md w-full p-6 space-y-5 border border-slate-700 shadow-2xl relative">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-          <span>🔔 Discord Webhook Integration</span>
-        </h3>
-        <button onclick="closeDiscordModal()" class="text-slate-400 hover:text-white transition text-lg">&times;</button>
-      </div>
+  <!-- TOAST CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 space-y-2 pointer-events-none"></div>
 
-      <div class="space-y-3">
-        <p class="text-xs text-slate-400 leading-relaxed">
-          Provide a Discord channel webhook URL. When a mess supervisor logs surplus food, RePlate automatically broadcasts an alert embed to your NGO volunteer server with batch specs, meal count, and expiry countdown.
-        </p>
-
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
-            Discord Webhook URL (Optional)
-          </label>
-          <input type="url" id="discordWebhookInput" placeholder="https://discord.com/api/webhooks/..."
-                 class="w-full px-3 py-2.5 rounded-xl bg-surface border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-emerald-500">
-        </div>
-      </div>
-
-      <div class="flex gap-3 pt-2">
-        <button onclick="closeDiscordModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold transition">
-          Close
-        </button>
-        <button onclick="saveDiscordWebhook()" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg transition">
-          Save Webhook URL
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
-
-  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <!-- JAVASCRIPT -->
   <script>
-    // Global App State
     let appState = {
       hostel_name: "Robin Hood Hostel Mess",
       capacity: 350,
       current_rsvp: { opt_outs: 45 },
       batches: [],
       historical_baseline: [],
-      metrics: {},
-      discord_configured: false
+      metrics: {}
     };
 
     let activeFilter = 'all';
@@ -831,48 +521,31 @@
     let historicalChartInstance = null;
     let categoryChartInstance = null;
 
-    // Shelf life map in hours
     const SHELF_LIFE_MAP = {
       "Dairy/Curry": 2,
       "Rice/Grains": 4,
       "Rotis/Dry": 6
     };
 
-    // Initialize on page load
     document.addEventListener("DOMContentLoaded", () => {
       fetchState();
-      initLiveClock();
-      updateShelfLifePreview("Rice/Grains");
-      // Poll / tick countdowns every second
+      updateCategorySelection("Rice/Grains");
       setInterval(tickCountdowns, 1000);
-      // Auto-refresh state every 30 seconds
       setInterval(fetchState, 30000);
     });
 
-    // Clock
-    function initLiveClock() {
-      const clockEl = document.getElementById("liveClock");
-      const update = () => {
-        const now = new Date();
-        clockEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      };
-      update();
-      setInterval(update, 1000);
-    }
-
-    // Tab Switching
     function switchTab(tabId) {
-      document.querySelectorAll(".tab-panel").forEach(panel => panel.classList.add("hidden"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
       document.getElementById(tabId).classList.remove("hidden");
 
       document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.remove("bg-emerald-500/20", "text-emerald-400", "border-emerald-500/40");
+        btn.classList.remove("text-emerald-400", "bg-emerald-500/10", "border-emerald-500/30");
         btn.classList.add("text-slate-400", "border-transparent");
       });
 
       const activeBtn = document.getElementById("btn-" + tabId);
       if (activeBtn) {
-        activeBtn.classList.add("bg-emerald-500/20", "text-emerald-400", "border-emerald-500/40");
+        activeBtn.classList.add("text-emerald-400", "bg-emerald-500/10", "border-emerald-500/30");
         activeBtn.classList.remove("text-slate-400", "border-transparent");
       }
 
@@ -881,7 +554,6 @@
       }
     }
 
-    // Fetch Full State from Flask Backend
     async function fetchState() {
       try {
         const res = await fetch("/api/state");
@@ -891,74 +563,57 @@
           syncUI();
         }
       } catch (err) {
-        console.error("Error fetching state:", err);
+        console.error("State fetch error:", err);
       }
     }
 
-    // Sync all views to current state
     function syncUI() {
       syncPredictorUI();
       syncBatchesUI();
       syncImpactUI();
-      updateDiscordLabel();
     }
 
-    // ==========================================
-    // 1. KITCHEN PREDICTOR LOGIC
-    // ==========================================
+    // 1. Kitchen Planner
     function syncPredictorUI() {
       const optOuts = appState.current_rsvp?.opt_outs || 0;
       const capacity = appState.capacity || 350;
       const expected = Math.max(0, capacity - optOuts);
-      const stdCook = (capacity * 0.45).toFixed(2);
       const optCook = (expected * 0.45).toFixed(2);
       const savedRaw = (optOuts * 0.45).toFixed(2);
       const moneySaved = Math.round(optOuts * 0.45 * 85);
       const co2Saved = (optOuts * 0.45 * 2.5).toFixed(1);
 
-      // Slider & numbers
       const slider = document.getElementById("rsvpSlider");
       if (slider && document.activeElement !== slider) {
         slider.value = optOuts;
       }
+
       document.getElementById("optOutCountDisplay").textContent = optOuts;
       document.getElementById("expectedDinersVal").textContent = expected;
       document.getElementById("optimizedTargetVal").textContent = optCook;
-      document.getElementById("baselineTargetText").textContent = stdCook + " kg";
-      document.getElementById("stdTargetDisplay").textContent = stdCook + " kg";
-      document.getElementById("savedRawDisplay").textContent = savedRaw + " kg";
       document.getElementById("preSavedKgVal").textContent = savedRaw;
       document.getElementById("preMoneySavedVal").textContent = "₹" + moneySaved.toLocaleString();
       document.getElementById("preCo2SavedVal").textContent = co2Saved + " kg CO₂e";
 
-      // Progress Bar width
-      const activePct = Math.max(5, Math.round((expected / capacity) * 100));
-      const savedPct = 100 - activePct;
-      document.getElementById("prepBarActive").style.width = activePct + "%";
-      document.getElementById("prepBarSaved").style.width = savedPct + "%";
+      const pct = Math.max(5, Math.round((expected / capacity) * 100));
+      document.getElementById("prepBarActive").style.width = pct + "%";
+      document.getElementById("prepPctText").textContent = `${100 - pct}% volume reduced`;
 
-      // Dynamic Chef Directive
-      const chefText = document.getElementById("chefAdvisoryText");
+      const dir = document.getElementById("chefDirectiveText");
       if (optOuts === 0) {
-        chefText.textContent = "Full hostel capacity attending tonight. Fire all burners to standard 157.5 kg volume (350 meal portions).";
-      } else if (optOuts <= 30) {
-        chefText.textContent = `Mild opt-out volume (${optOuts} students). Scale down rice batch by ${(optOuts * 0.2).toFixed(1)} kg and reduce roti count by ~${optOuts * 2} pieces.`;
-      } else if (optOuts <= 75) {
-        chefText.textContent = `Noticeable opt-out volume (${optOuts} students). Turn off burner #3. Save ${(optOuts * 0.45).toFixed(1)} kg of raw lentils/vegetables in pantry for tomorrow lunch.`;
+        dir.textContent = "Full capacity expected. Cook standard 157.5 kg volume (350 portions).";
       } else {
-        chefText.textContent = `Major weekend exodus (${optOuts} students absent). Halve prep batch size. Prepare only ${optCook} kg total. Immediate pantry savings: ₹${moneySaved}.`;
+        dir.textContent = `Scale back kitchen prep: reduce rice cooker batch by ${(optOuts * 0.2).toFixed(1)} kg and prepare ${optOuts * 2} fewer rotis. Hold ${savedRaw} kg raw ingredients in pantry.`;
       }
     }
 
     function handleSliderChange(val) {
       document.getElementById("optOutCountDisplay").textContent = val;
-      // Temporary live forecast update while dragging
       const capacity = appState.capacity || 350;
       const optOuts = parseInt(val) || 0;
       const expected = Math.max(0, capacity - optOuts);
       document.getElementById("expectedDinersVal").textContent = expected;
       document.getElementById("optimizedTargetVal").textContent = (expected * 0.45).toFixed(2);
-      document.getElementById("savedRawDisplay").textContent = (optOuts * 0.45).toFixed(2) + " kg";
       document.getElementById("preSavedKgVal").textContent = (optOuts * 0.45).toFixed(2);
     }
 
@@ -974,10 +629,10 @@
           appState.current_rsvp = data.current_rsvp;
           appState.metrics = data.metrics;
           syncUI();
-          showToast(`RSVP updated: ${val} students opting out tonight`, "success");
+          showToast(`RSVP updated: ${val} students opting out`);
         }
       } catch (err) {
-        showToast("Failed to update student RSVP", "error");
+        showToast("Failed to update headcount", "error");
       }
     }
 
@@ -992,34 +647,27 @@
       setRsvpOptOuts(next);
     }
 
-    // ==========================================
-    // 2. SURPLUS LOGGER LOGIC
-    // ==========================================
-    function updateShelfLifePreview(category) {
-      const hours = SHELF_LIFE_MAP[category] || 4;
+    // 2. Log Surplus
+    function updateCategorySelection(cat) {
+      const hours = SHELF_LIFE_MAP[cat] || 4;
       const now = new Date();
       now.setHours(now.getHours() + hours);
       const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      document.getElementById("previewExpiryTime").textContent = `${timeStr} (in ${hours} hrs)`;
+      document.getElementById("previewWindowText").textContent = `Safe until ${timeStr} (${hours}h window)`;
 
-      // Update card border highlights
-      document.querySelectorAll(".category-card").forEach(card => {
+      document.querySelectorAll(".category-radio").forEach(card => {
         const input = card.querySelector("input");
-        if (input.value === category) {
-          card.classList.add("border-2", "border-emerald-500", "bg-emerald-500/10");
-          card.classList.remove("border-slate-700/80", "bg-surface");
+        if (input.value === cat) {
+          card.classList.add("border-emerald-500", "bg-emerald-500/10");
+          card.classList.remove("border-app-border", "bg-app-bg");
         } else {
-          card.classList.remove("border-2", "border-emerald-500", "bg-emerald-500/10");
-          card.classList.add("border-slate-700/80", "bg-surface");
+          card.classList.remove("border-emerald-500", "bg-emerald-500/10");
+          card.classList.add("border-app-border", "bg-app-bg");
         }
       });
     }
 
-    function fillDishDescription(text) {
-      document.getElementById("foodItemsInput").value = text;
-    }
-
-    function setWeightInput(val) {
+    function setWeightOffset(val) {
       const input = document.getElementById("weightKgInput");
       const current = parseFloat(input.value) || 0;
       input.value = (current + val).toFixed(1);
@@ -1033,37 +681,30 @@
 
       if (!foodItems || !weight) return;
 
-      const btn = document.getElementById("btnLogSurplus");
+      const btn = document.getElementById("btnLogSubmit");
       btn.disabled = true;
-      btn.innerHTML = `<span>Broadcasting...</span>`;
+      btn.textContent = "Logging...";
 
       try {
         const res = await fetch("/api/log-surplus", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            food_items: foodItems,
-            category: category,
-            weight_kg: weight
-          })
+          body: JSON.stringify({ food_items: foodItems, category: category, weight_kg: weight })
         });
         const data = await res.json();
         if (data.status === "success") {
           appState.batches = data.batches;
           appState.metrics = data.metrics;
           syncUI();
-          showToast(`Surplus logged! Batch ID: ${data.batch.id} • OTP: ${data.batch.handover_otp}`, "success");
           document.getElementById("foodItemsInput").value = "";
-          // Switch to NGO rescue portal to see card with live timer
+          showToast(`Logged batch #${data.batch.id}`);
           switchTab("tab-rescue");
-        } else {
-          showToast(data.message || "Failed to log surplus", "error");
         }
       } catch (err) {
-        showToast("Network error while logging surplus", "error");
+        showToast("Error logging surplus", "error");
       } finally {
         btn.disabled = false;
-        btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg><span>Log Surplus & Generate Security OTP</span>`;
+        btn.textContent = "Log Surplus Batch";
       }
     }
 
@@ -1075,27 +716,25 @@
           appState.batches = data.batches;
           appState.metrics = data.metrics;
           syncUI();
-          showToast(`Simulated: ${data.batch.food_items} (${data.batch.weight_kg} kg)`, "success");
+          showToast(`Added sample tray: ${data.batch.food_items}`);
           switchTab("tab-rescue");
         }
       } catch (err) {
-        showToast("Error generating demo surplus", "error");
+        showToast("Failed to simulate batch", "error");
       }
     }
 
-    // ==========================================
-    // 3. NGO RESCUE PORTAL LOGIC
-    // ==========================================
-    function setBatchFilter(filter) {
-      activeFilter = filter;
+    // 3. Batches & Redistribution
+    function setBatchFilter(f) {
+      activeFilter = f;
       document.querySelectorAll(".batch-filter-btn").forEach(btn => {
-        btn.classList.remove("bg-slate-800", "text-white", "border", "border-slate-700", "bg-emerald-500/20", "text-emerald-300");
+        btn.classList.remove("text-white", "bg-app-border");
         btn.classList.add("text-slate-400");
       });
-      const activeBtn = document.getElementById("filter-" + filter);
+      const activeBtn = document.getElementById("filter-" + f);
       if (activeBtn) {
         activeBtn.classList.remove("text-slate-400");
-        activeBtn.classList.add("bg-slate-800", "text-white", "border", "border-slate-700");
+        activeBtn.classList.add("text-white", "bg-app-border");
       }
       syncBatchesUI();
     }
@@ -1105,16 +744,8 @@
       const container = document.getElementById("batchesContainer");
       if (!container) return;
 
-      // Update counters
       const availableCount = batches.filter(b => b.status === "Available").length;
-      const claimedCount = batches.filter(b => b.status === "Claimed").length;
-      const expiredCount = batches.filter(b => b.status === "Expired").length;
-
-      document.getElementById("count-all").textContent = batches.length;
-      document.getElementById("count-available").textContent = availableCount;
-      document.getElementById("count-claimed").textContent = claimedCount;
-      document.getElementById("count-expired").textContent = expiredCount;
-      document.getElementById("activeBadgeCount").textContent = `${availableCount} ACTIVE`;
+      document.getElementById("activeBadgeCount").textContent = availableCount;
 
       const filtered = batches.filter(b => {
         if (activeFilter === "all") return true;
@@ -1123,119 +754,96 @@
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div class="col-span-full glass-card rounded-2xl p-12 text-center text-slate-400">
-            <span class="text-3xl block mb-2">🍽️</span>
-            <p class="font-bold text-slate-300">No surplus batches found in this view.</p>
-            <p class="text-xs text-slate-500 mt-1">Log a new batch from the Surplus Logger tab or click Simulate Demo Surplus.</p>
+          <div class="col-span-full bg-app-surface border border-app-border rounded-xl p-8 text-center text-app-muted text-xs">
+            No batches found in this view.
           </div>
         `;
         return;
       }
 
-      container.innerHTML = filtered.map(batch => renderBatchCard(batch)).join("");
+      container.innerHTML = filtered.map(b => renderBatchCard(b)).join("");
     }
 
-    function renderBatchCard(batch) {
-      const meals = Math.round(batch.weight_kg / 0.4);
-      let catBadgeClass = "bg-cyan-500/10 text-cyan-400 border-cyan-500/30";
-      if (batch.category === "Dairy/Curry") catBadgeClass = "bg-amber-500/10 text-amber-400 border-amber-500/30";
-      if (batch.category === "Rotis/Dry") catBadgeClass = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+    function renderBatchCard(b) {
+      const meals = Math.round(b.weight_kg / 0.4);
+      let catBadge = "bg-slate-800 text-slate-300";
+      if (b.category === "Dairy/Curry") catBadge = "bg-amber-500/10 text-amber-400 border border-amber-500/20";
+      if (b.category === "Rice/Grains") catBadge = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+      if (b.category === "Rotis/Dry") catBadge = "bg-teal-500/10 text-teal-400 border border-teal-500/20";
 
       let statusBadge = "";
-      let actionArea = "";
+      let actionEl = "";
 
-      if (batch.status === "Available") {
-        statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Available for Rescue</span>`;
-        actionArea = `
-          <button onclick="openClaimModal('${batch.id}')" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold text-xs shadow-md shadow-emerald-500/20 transition active:scale-95 flex items-center justify-center gap-1.5">
-            <span>Claim Pickup (NGO)</span>
+      if (b.status === "Available") {
+        statusBadge = `<span class="text-[11px] text-emerald-400 font-medium">Available</span>`;
+        actionEl = `
+          <button onclick="openClaimModal('${b.id}')" class="w-full py-2 px-3 rounded-md bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-semibold text-xs transition">
+            Claim Pickup
           </button>
         `;
-      } else if (batch.status === "Claimed") {
-        statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/40">Claimed: ${escapeHtml(batch.claimed_by || 'NGO')}</span>`;
-        actionArea = `
-          <div class="bg-surface/90 border border-blue-500/40 rounded-xl p-3 flex items-center justify-between">
+      } else if (b.status === "Claimed") {
+        statusBadge = `<span class="text-[11px] text-sky-400 font-medium">Claimed</span>`;
+        actionEl = `
+          <div class="p-2.5 rounded-lg bg-app-bg border border-app-border flex items-center justify-between text-xs">
             <div>
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kitchen Handover OTP</span>
-              <span class="text-xs text-blue-400">Present upon van arrival</span>
+              <span class="text-[10px] text-app-muted block">${escapeHtml(b.claimed_by || 'NGO')}</span>
+              <span class="text-slate-300 font-medium">Gate Pass OTP</span>
             </div>
-            <div class="px-3 py-1 rounded-lg bg-blue-950/80 border border-blue-400 text-blue-300 font-mono font-black text-lg tracking-widest shadow-inner">
-              ${batch.handover_otp}
-            </div>
+            <span class="font-mono font-bold text-white tracking-wider bg-app-surface px-2.5 py-1 rounded border border-app-border">
+              ${b.handover_otp}
+            </span>
           </div>
         `;
       } else {
-        statusBadge = `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/40">Expired (Bio-Compost)</span>`;
-        actionArea = `
-          <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-[11px] text-rose-300 text-center font-medium">
-            Safe consumption threshold elapsed. Routed to campus biogas generator.
+        statusBadge = `<span class="text-[11px] text-rose-400 font-medium">Expired</span>`;
+        actionEl = `
+          <div class="text-[11px] text-app-muted text-center py-1">
+            Safe consumption threshold reached.
           </div>
         `;
       }
 
       return `
-        <div class="glass-card glass-card-hover rounded-2xl p-5 flex flex-col justify-between space-y-4 transition" data-batch-id="${batch.id}" data-expires-at="${batch.expires_at}">
+        <div class="bg-app-surface border border-app-border hover:border-app-borderHover rounded-xl p-4 flex flex-col justify-between space-y-3 transition" data-batch-id="${b.id}" data-expires-at="${b.expires_at}">
           
-          <!-- Card Header -->
-          <div class="space-y-2">
-            <div class="flex items-center justify-between gap-2">
-              <span class="font-mono text-xs font-bold text-slate-400">#${batch.id}</span>
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs text-app-muted">#${b.id}</span>
               ${statusBadge}
             </div>
-            <h3 class="text-base font-bold text-white leading-snug">${escapeHtml(batch.food_items)}</h3>
-            <div class="flex flex-wrap items-center gap-2 pt-1">
-              <span class="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${catBadgeClass}">
-                ${batch.category}
-              </span>
-              <span class="text-xs text-slate-400">
-                <strong>${batch.weight_kg} kg</strong> (~${meals} meals)
-              </span>
+            <h3 class="font-semibold text-white text-sm mt-1.5 leading-snug">${escapeHtml(b.food_items)}</h3>
+            <div class="flex items-center gap-2 mt-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-medium ${catBadge}">${b.category}</span>
+              <span class="text-xs text-slate-400 font-mono">${b.weight_kg} kg (~${meals} meals)</span>
             </div>
           </div>
 
-          <!-- Live Spoilage Countdown Timer -->
-          <div class="bg-surface/80 rounded-xl p-3 border border-slate-800 space-y-2">
-            <div class="flex items-center justify-between text-xs">
-              <span class="text-slate-400 flex items-center gap-1">
-                <span>⏱</span> Spoilage Countdown:
-              </span>
-              <span class="countdown-timer font-mono font-bold text-emerald-400 text-sm" data-id="${batch.id}">
-                --:--:--
-              </span>
-            </div>
-            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-              <div class="countdown-progress bg-emerald-500 h-full rounded-full transition-all duration-1000" style="width: 100%;"></div>
-            </div>
+          <div class="p-2.5 rounded-lg bg-app-bg border border-app-border/80 flex items-center justify-between text-xs">
+            <span class="text-app-muted">Safe window:</span>
+            <span class="countdown-timer font-mono font-semibold text-emerald-400 text-xs">--:--:--</span>
           </div>
 
-          <!-- Actions -->
-          <div class="pt-1">
-            ${actionArea}
+          <div>
+            ${actionEl}
           </div>
 
         </div>
       `;
     }
 
-    // Ticking Countdown Timers for Spoilage Prevention
     function tickCountdowns() {
       const now = new Date().getTime();
       document.querySelectorAll("[data-expires-at]").forEach(card => {
         const expiresAtStr = card.getAttribute("data-expires-at");
-        const batchId = card.getAttribute("data-batch-id");
         const timerEl = card.querySelector(".countdown-timer");
-        const progressEl = card.querySelector(".countdown-progress");
-
         if (!expiresAtStr || !timerEl) return;
 
-        const targetTime = new Date(expiresAtStr).getTime();
-        const diff = targetTime - now;
+        const target = new Date(expiresAtStr).getTime();
+        const diff = target - now;
 
         if (diff <= 0) {
-          timerEl.textContent = "00:00:00 (EXPIRED)";
-          timerEl.classList.remove("text-emerald-400", "text-amber-400");
-          timerEl.classList.add("text-rose-400");
-          if (progressEl) progressEl.style.width = "0%";
+          timerEl.textContent = "00:00:00 (Elapsed)";
+          timerEl.className = "countdown-timer font-mono text-rose-400 text-xs";
           return;
         }
 
@@ -1243,34 +851,27 @@
         const hours = Math.floor(totalSecs / 3600);
         const mins = Math.floor((totalSecs % 3600) / 60);
         const secs = totalSecs % 60;
-
         const pad = (n) => String(n).padStart(2, "0");
-        timerEl.textContent = `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
 
-        // Dynamic timer styling based on time remaining
+        timerEl.textContent = `${pad(hours)}:${pad(mins)}:${pad(secs)} remaining`;
+
         if (totalSecs < 1800) {
-          // Less than 30 mins: red pulse
-          timerEl.className = "countdown-timer font-mono font-bold text-rose-400 text-sm animate-pulse";
-          if (progressEl) progressEl.className = "countdown-progress bg-rose-500 h-full rounded-full";
+          timerEl.className = "countdown-timer font-mono text-rose-400 text-xs font-semibold";
         } else if (totalSecs < 3600) {
-          // Less than 1 hour: amber warning
-          timerEl.className = "countdown-timer font-mono font-bold text-amber-400 text-sm";
-          if (progressEl) progressEl.className = "countdown-progress bg-amber-500 h-full rounded-full";
+          timerEl.className = "countdown-timer font-mono text-amber-400 text-xs";
         } else {
-          timerEl.className = "countdown-timer font-mono font-bold text-emerald-400 text-sm";
-          if (progressEl) progressEl.className = "countdown-progress bg-emerald-500 h-full rounded-full";
+          timerEl.className = "countdown-timer font-mono text-emerald-400 text-xs";
         }
       });
     }
 
-    // Claim Modal Handlers
-    function openClaimModal(batchId) {
-      selectedBatchForClaim = batchId;
-      const batch = (appState.batches || []).find(b => b.id === batchId);
+    function openClaimModal(id) {
+      selectedBatchForClaim = id;
+      const batch = (appState.batches || []).find(b => b.id === id);
       if (!batch) return;
 
       document.getElementById("modalBatchTitle").textContent = batch.food_items;
-      document.getElementById("modalBatchMeta").textContent = `${batch.weight_kg} kg • ${batch.category} • Batch #${batch.id}`;
+      document.getElementById("modalBatchMeta").textContent = `${batch.weight_kg} kg • ${batch.category}`;
       document.getElementById("claimModal").classList.remove("hidden");
       document.getElementById("claimModal").classList.add("flex");
     }
@@ -1283,19 +884,16 @@
 
     async function confirmClaim() {
       if (!selectedBatchForClaim) return;
-      const ngoName = document.getElementById("modalNgoSelect").value;
+      const ngo = document.getElementById("modalNgoSelect").value;
       const btn = document.getElementById("btnConfirmClaim");
       btn.disabled = true;
-      btn.textContent = "Locking Claim...";
+      btn.textContent = "Saving...";
 
       try {
         const res = await fetch("/api/claim-surplus", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: selectedBatchForClaim,
-            ngo_name: ngoName
-          })
+          body: JSON.stringify({ id: selectedBatchForClaim, ngo_name: ngo })
         });
         const data = await res.json();
         if (data.status === "success") {
@@ -1303,24 +901,19 @@
           appState.metrics = data.metrics;
           closeClaimModal();
           syncUI();
-          showToast(`Claimed by ${ngoName}! Handover OTP: ${data.handover_otp}`, "success");
-        } else {
-          showToast(data.message || "Failed to claim batch", "error");
+          showToast(`Claimed by ${ngo}. OTP: ${data.handover_otp}`);
         }
       } catch (err) {
-        showToast("Error communicating with server", "error");
+        showToast("Error claiming batch", "error");
       } finally {
         btn.disabled = false;
-        btn.textContent = "Confirm & Lock OTP";
+        btn.textContent = "Confirm Claim";
       }
     }
 
-    // ==========================================
-    // 4. IMPACT METRICS LOGIC & CHARTS
-    // ==========================================
+    // 4. Analytics & Charts
     function syncImpactUI() {
       const m = appState.metrics || {};
-      
       document.getElementById("kpiTotalDiverted").textContent = (m.total_diverted_kg || 0).toFixed(1);
       document.getElementById("kpiMealsServed").textContent = (m.meals_diverted || 0).toLocaleString();
       document.getElementById("kpiRecoveryRate").textContent = (m.surplus_recovery_rate_pct || 0).toFixed(1);
@@ -1328,24 +921,23 @@
       document.getElementById("kpiMoneySaved").textContent = "₹" + (m.money_saved_inr || 0).toLocaleString();
       document.getElementById("kpiCo2Saved").textContent = (m.co2_saved_kg || 0).toFixed(1) + " kg";
 
-      document.getElementById("kpiBreakdownText").textContent = `${(m.pre_production_saved_kg || 0).toFixed(1)}kg prevented`;
-      document.getElementById("kpiRescuedText").textContent = `${(m.claimed_surplus_kg || 0).toFixed(1)}kg rescued`;
+      document.getElementById("kpiBreakdownSubtext").textContent = 
+        `${(m.pre_production_saved_kg || 0).toFixed(1)}kg prevented + ${(m.claimed_surplus_kg || 0).toFixed(1)}kg rescued`;
 
-      // Update category legend
-      const catLegend = document.getElementById("categoryLegend");
-      if (catLegend && m.category_weights) {
-        catLegend.innerHTML = `
-          <div class="flex items-center justify-between text-slate-300">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Dairy/Curry</span>
-            <span class="font-mono font-bold">${m.category_weights['Dairy/Curry'] || 0} kg</span>
+      const leg = document.getElementById("categoryLegend");
+      if (leg && m.category_weights) {
+        leg.innerHTML = `
+          <div class="flex justify-between text-app-muted">
+            <span>Dairy/Curry</span>
+            <span class="font-mono text-slate-300">${m.category_weights['Dairy/Curry'] || 0} kg</span>
           </div>
-          <div class="flex items-center justify-between text-slate-300">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> Rice/Grains</span>
-            <span class="font-mono font-bold">${m.category_weights['Rice/Grains'] || 0} kg</span>
+          <div class="flex justify-between text-app-muted">
+            <span>Rice/Grains</span>
+            <span class="font-mono text-slate-300">${m.category_weights['Rice/Grains'] || 0} kg</span>
           </div>
-          <div class="flex items-center justify-between text-slate-300">
-            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Rotis/Dry</span>
-            <span class="font-mono font-bold">${m.category_weights['Rotis/Dry'] || 0} kg</span>
+          <div class="flex justify-between text-app-muted">
+            <span>Rotis/Dry</span>
+            <span class="font-mono text-slate-300">${m.category_weights['Rotis/Dry'] || 0} kg</span>
           </div>
         `;
       }
@@ -1365,9 +957,7 @@
       const preWaste = baseline.map(b => b.pre_replate_waste_kg);
       const postWaste = baseline.map(b => b.post_replate_waste_kg);
 
-      if (historicalChartInstance) {
-        historicalChartInstance.destroy();
-      }
+      if (historicalChartInstance) historicalChartInstance.destroy();
 
       historicalChartInstance = new Chart(ctx, {
         type: 'bar',
@@ -1375,20 +965,16 @@
           labels: labels,
           datasets: [
             {
-              label: 'Before RePlate Waste (kg)',
+              label: 'Pre-RePlate Waste (kg)',
               data: preWaste,
-              backgroundColor: 'rgba(239, 68, 68, 0.75)',
-              borderColor: '#ef4444',
-              borderWidth: 1.5,
-              borderRadius: 6
+              backgroundColor: '#334155',
+              borderRadius: 4
             },
             {
               label: 'Post-RePlate Waste (kg)',
               data: postWaste,
-              backgroundColor: 'rgba(16, 185, 129, 0.85)',
-              borderColor: '#10b981',
-              borderWidth: 1.5,
-              borderRadius: 6
+              backgroundColor: '#10B981',
+              borderRadius: 4
             }
           ]
         },
@@ -1398,33 +984,19 @@
           plugins: {
             legend: {
               labels: {
-                color: '#cbd5e1',
-                font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '600' }
+                color: '#94A3B8',
+                font: { family: "'Inter', sans-serif", size: 11, weight: '500' }
               }
-            },
-            tooltip: {
-              backgroundColor: '#111827',
-              borderColor: '#374151',
-              borderWidth: 1,
-              padding: 10,
-              titleColor: '#fff',
-              bodyColor: '#e2e8f0'
             }
           },
           scales: {
             x: {
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: { color: '#94a3b8' }
+              grid: { display: false },
+              ticks: { color: '#64748B' }
             },
             y: {
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: { color: '#94a3b8' },
-              title: {
-                display: true,
-                text: 'Daily Waste in Kilograms (kg)',
-                color: '#64748b',
-                font: { size: 11 }
-              }
+              grid: { color: '#1E2638' },
+              ticks: { color: '#64748B' }
             }
           }
         }
@@ -1441,9 +1013,7 @@
         "Rotis/Dry": 12.0
       };
 
-      if (categoryChartInstance) {
-        categoryChartInstance.destroy();
-      }
+      if (categoryChartInstance) categoryChartInstance.destroy();
 
       categoryChartInstance = new Chart(ctx, {
         type: 'doughnut',
@@ -1455,85 +1025,22 @@
               weights['Rice/Grains'] || 1,
               weights['Rotis/Dry'] || 1
             ],
-            backgroundColor: [
-              '#f59e0b',
-              '#06b6d4',
-              '#10b981'
-            ],
-            borderColor: '#090d16',
-            borderWidth: 3
+            backgroundColor: ['#F59E0B', '#10B981', '#14B8A6'],
+            borderColor: '#111622',
+            borderWidth: 2
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false }
-          },
-          cutout: '72%'
+          plugins: { legend: { display: false } },
+          cutout: '75%'
         }
       });
-    }
-
-    function copyImpactSummary() {
-      const m = appState.metrics || {};
-      const summary = `🏆 RePlate Campus Surplus Router — Arbiter Hackathon Pitch Telemetry
----------------------------------------------------------------
-Campus Node: ${appState.hostel_name} (350 Hostellers)
-Total Food Diverted: ${(m.total_diverted_kg || 0).toFixed(1)} kg
-Nutritious Meals Served: ${m.meals_diverted || 0} meals (@ 400g/meal)
-Source Reduction Prevented: ${(m.pre_production_saved_kg || 0).toFixed(1)} kg (${(m.pre_meal_waste_cut_pct || 0).toFixed(1)}% cut)
-Surplus Recovery Rate: ${(m.surplus_recovery_rate_pct || 0).toFixed(1)}%
-Direct Mess Budget Saved: ₹${(m.money_saved_inr || 0).toLocaleString()}
-Carbon Landfill Emissions Avoided: ${(m.co2_saved_kg || 0).toFixed(1)} kg CO2e
----------------------------------------------------------------`;
-      navigator.clipboard.writeText(summary).then(() => {
-        showToast("Impact summary copied to clipboard for pitch deck!", "success");
-      });
-    }
-
-    // ==========================================
-    // 5. GLOBAL & MODAL CONTROLS
-    // ==========================================
-    function openDiscordModal() {
-      document.getElementById("discordModal").classList.remove("hidden");
-      document.getElementById("discordModal").classList.add("flex");
-    }
-
-    function closeDiscordModal() {
-      document.getElementById("discordModal").classList.add("hidden");
-      document.getElementById("discordModal").classList.remove("flex");
-    }
-
-    async function saveDiscordWebhook() {
-      const url = document.getElementById("discordWebhookInput").value.trim();
-      try {
-        const res = await fetch("/api/update-config", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ discord_webhook_url: url })
-        });
-        const data = await res.json();
-        if (data.status === "success") {
-          appState.discord_configured = data.discord_configured;
-          updateDiscordLabel();
-          closeDiscordModal();
-          showToast(url ? "Discord webhook configured!" : "Discord webhook cleared", "success");
-        }
-      } catch (err) {
-        showToast("Failed to save webhook config", "error");
-      }
-    }
-
-    function updateDiscordLabel() {
-      const label = document.getElementById("discordStatusLabel");
-      if (label) {
-        label.textContent = appState.discord_configured ? "Discord: Connected" : "Discord Bot";
-      }
     }
 
     async function resetDemoState() {
-      if (!confirm("Reset all RePlate demo batches and headcount forecasts to clean initial state?")) return;
+      if (!confirm("Reset demo data to initial state?")) return;
       try {
         const res = await fetch("/api/reset-demo", { method: "POST" });
         const data = await res.json();
@@ -1544,40 +1051,32 @@ Carbon Landfill Emissions Avoided: ${(m.co2_saved_kg || 0).toFixed(1)} kg CO2e
           appState.metrics = data.metrics;
           syncUI();
           renderCharts();
-          showToast("Demo data refreshed to clean state", "success");
+          showToast("Demo reset complete");
         }
       } catch (err) {
-        showToast("Failed to reset demo state", "error");
+        showToast("Reset failed", "error");
       }
     }
 
-    function showToast(message, type = "info") {
-      const container = document.getElementById("toastContainer");
-      if (!container) return;
+    function showToast(msg) {
+      const c = document.getElementById("toastContainer");
+      if (!c) return;
 
-      const toast = document.createElement("div");
-      let borderCol = "border-emerald-500/50";
-      let icon = "✅";
-      if (type === "error") {
-        borderCol = "border-rose-500/50";
-        icon = "❌";
-      }
-
-      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900 text-white text-xs font-semibold border ${borderCol} shadow-2xl transition transform duration-200`;
-      toast.innerHTML = `<span>${icon}</span><span>${escapeHtml(message)}</span>`;
-      container.appendChild(toast);
+      const t = document.createElement("div");
+      t.className = "pointer-events-auto px-3.5 py-2 rounded-lg bg-slate-900 border border-app-border text-slate-200 text-xs font-medium shadow-lg transition";
+      t.textContent = msg;
+      c.appendChild(t);
 
       setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transform = "translateY(10px)";
-        setTimeout(() => toast.remove(), 250);
-      }, 3500);
+        t.style.opacity = "0";
+        setTimeout(() => t.remove(), 200);
+      }, 3000);
     }
 
-    function escapeHtml(text) {
-      if (!text) return "";
-      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
-      return text.toString().replace(/[&<>"']/g, m => map[m]);
+    function escapeHtml(t) {
+      if (!t) return "";
+      const m = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return t.toString().replace(/[&<>"']/g, s => m[s]);
     }
   </script>
 </body>
