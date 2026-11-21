@@ -86,10 +86,4 @@ Open **[http://127.0.0.1:5001](http://127.0.0.1:5001)** in your browser.
 | `POST` | `/api/update-config` | Configures optional Discord webhook alert URL |
 | `POST` | `/api/reset-demo` | Resets state to clean initial presentation state |
 
----
 
-## 🧑‍⚖️ Hackathon Presentation Tips
-1. Start on **1. Kitchen Predictor**: click *"Simulate 25 Students Skipping"* to show source reduction before cooking.
-2. Jump to **2. Surplus Logger**: click *"⚡ Simulate Demo Surplus"* to show instant tray logging.
-3. Switch to **3. NGO Rescue Portal**: observe the live ticking countdown timer, click *"Claim Pickup"*, and reveal the 4-digit security OTP.
-4. Conclude on **4. Impact Metrics**: showcase the 7-day before-vs-after waste drop chart and click *"Copy Pitch Telemetry"*.
